@@ -18,6 +18,7 @@ class UserManager: ObservableObject {
     private let userKey = "userKey"
     
     func login(authen: AuthResponse) {
+        isLogin = true
         currentUser = authen.user
         tokenManager.saveToken(token: authen.accessToken)
         saveUserToStorage(user: authen.user)

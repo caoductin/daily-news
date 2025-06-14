@@ -8,23 +8,26 @@
 import SwiftUI
 
 struct AuthPageView: View {
-    @State var currentPage = 0
-    @State var isSignIn: Bool = false
-    @State var selection: Int
+    @State var selection: Int = 0
+    @StateObject var loginVM = LoginViewModel()
+    @State var currentTab: Authtab = .signIn
     var body: some View {
-        TopTab(tabs: ["sign in", "sign up"], currentTab: $selection)
+        VStack {
+            TopTab(tabs: Authtab.allCases, currentTab: $currentTab)
             
-        
-        TabView(selection: $selection) {
-            LoginView()
-                .tag(0)
-            Text("Sign up")
-                .tag(1)
+            TabView(selection: $currentTab.animation()) {
+                LoginView(loginVM: loginVM)
+                    .tag(Authtab.signIn)
+                SignUpView()
+                    .tag(Authtab.signUp)
+            }
+            .tabViewStyle(.page)
+            .indexViewStyle(.page(backgroundDisplayMode: .never))
         }
-        .tabViewStyle(.page)
-        .indexViewStyle(.page(backgroundDisplayMode: .never))
+        .loadingViewBuilder(isLoading: loginVM.isLoading)
     }
 }
+
 struct AuthPageViewPreviewWrapper: View {
     @State private var selection = 0
     
@@ -32,6 +35,20 @@ struct AuthPageViewPreviewWrapper: View {
         AuthPageView(selection: selection)
     }
 }
+
 #Preview {
     AuthPageViewPreviewWrapper()
+}
+
+extension Binding {
+    func animated(_ animation: Animation = .easeInOut) -> Binding<Value> {
+        Binding(
+            get: { self.wrappedValue },
+            set: { newValue in
+                withAnimation(animation) {
+                    self.wrappedValue = newValue
+                }
+            }
+        )
+    }
 }

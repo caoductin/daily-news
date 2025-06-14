@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SecureTextField: View {
-    @State private var password: String = ""
+    @Binding var password: String
     @State private var showPassword: Bool = false
     @FocusState private var isPasswordFieldFocused: Bool
     var body: some View {
@@ -47,5 +47,6 @@ struct SecureTextField: View {
 }
 
 #Preview {
-    SecureTextField()
+    @Previewable @State var password = ""
+    SecureTextField(password: $password)
 }

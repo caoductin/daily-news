@@ -8,53 +8,29 @@
 import SwiftUI
 
 struct TabBarButton: View {
+    let icon: String
     let tab: Tab
-    @Binding var selectedTab: Tab
-    let systemIcon: String
     let title: String
-    
-    var isSelected: Bool {
-        selectedTab == tab
-    }
+    @Binding var selectedTab: Tab
     
     var body: some View {
-        Button {
+        Button(action: {
             selectedTab = tab
-        } label: {
+        }) {
             VStack {
-                Image(systemName: systemIcon)
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(isSelected ? .blue : .gray)
+                Image(systemName: icon)
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundColor(selectedTab == tab ? .blue : .gray)
+                    .padding(8)
+                    .background(selectedTab == tab ? Color.blue.opacity(0.2) : Color.clear)
+                    .clipShape(Circle())
                 Text(title)
-                    .font(.caption)
-                    .foregroundColor(isSelected ? .blue : .gray)
             }
-            .padding(.vertical, 8)
         }
-        
     }
+    
 }
 
 #Preview {
-    StatefulPreviewWrapper(Tab.home) { selectedTab in
-        TabBarButton(
-            tab: .home,
-            selectedTab: selectedTab,
-            systemIcon: "house.fill",
-            title: "Home"
-        )
-    }
-}
-struct StatefulPreviewWrapper<Value, Content: View>: View {
-    @State var value: Value
-    var content: (Binding<Value>) -> Content
-    
-    init(_ value: Value, content: @escaping (Binding<Value>) -> Content) {
-        _value = State(initialValue: value)
-        self.content = content
-    }
-    
-    var body: some View {
-        content($value)
-    }
+    TabBarButton(icon: "square.and.arrow.up", tab: .home, title: "homeView", selectedTab: .constant(.home))
 }

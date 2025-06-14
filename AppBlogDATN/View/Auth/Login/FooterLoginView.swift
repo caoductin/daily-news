@@ -27,7 +27,7 @@ struct FooterLoginView: View {
             Label {
                 Text("Continue with Google")
             } icon: {
-                Image("icons8-google-48")
+                Image("google_icon")
                     .resizable()
             }
             .modifier(LoginButton(backgroundColor: .white,

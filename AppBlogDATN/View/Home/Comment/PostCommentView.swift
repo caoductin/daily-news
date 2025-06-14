@@ -9,15 +9,19 @@ import SwiftUI
 
 struct PostCommentView: View {
     @Binding var commentPost: CommentResponse
-    var onlike: () -> Void = {}
-    var onReply: () -> Void = {}
+    @State private var isLiked: Bool = false
+    @State private var likeCount: Int = 0
+    var onLikeTapped: ((CommentResponse) -> Void)? = nil
+    var onDeleteTapped: ((CommentResponse) -> Void)? = nil
+    let profileImage = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top, spacing: 12) {
-                AvatarView(name: commentPost.userInfo.username)
+                AvatarView(name: commentPost.userInfo?.username ?? profileImage)
                 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(commentPost.userInfo.username)
+                    Text(commentPost.userInfo?.username ?? getUserName())
                         .font(.headline)
                     
                     Text(commentPost.content)
@@ -26,22 +30,31 @@ struct PostCommentView: View {
                     
                     HStack(spacing: 16) {
                         Button {
-                            onlike()
+                            onDeleteTapped?(commentPost)
                         }
                         label: {
-                            Label("Reply", systemImage: "message")
+                            Label("Delete", systemImage: "message")
                         }
-                        Button{
-                            onReply()
+                        Button {
+                            if UserManager.shared.isLogin {
+                                isLiked.toggle()
+                                likeCount += isLiked ? 1 : -1
+                            }
+                            onLikeTapped?(commentPost)
                         }
                         label: {
-                            Label("\(commentPost.numberOfLikes)", systemImage: "hand.thumbsup")
+                            Label("\(likeCount)", systemImage: isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                                .foregroundColor(isLiked ? .blue : .gray)
                         }
                     }
                     .font(.subheadline)
                     .foregroundColor(.blue)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
+            }
+            .onAppear {
+                isLiked = commentPost.isLikedByCurrentUser
+                likeCount = commentPost.numberOfLikes
             }
         }
     }
@@ -60,7 +73,8 @@ struct AvatarView: View {
     }
 }
 
-//#Preview {
-//    var comment = CommentResponse(id: "21341", content: "testtesttesttesttest", postId: "123123", userId: "123123", likes: [], numberOfLikes: 12, createdAt: "", updatedAt: "", userInfo: UserResponseComment(id: "123", username: "tuans", profilePicture: ""))
-//    PostCommentView(commentPost: comment)
-//}
+extension PostCommentView {
+    private func getUserName() -> String {
+        return UserManager.shared.currentUser?.username ?? "Unkown User"
+    }
+}

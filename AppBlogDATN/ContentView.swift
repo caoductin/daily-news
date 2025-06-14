@@ -8,24 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
-    var action: (() -> ())?
+    @StateObject var loginManager = UserManager.shared
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-            Button(action: {
-                action?()
-            }) {
+        if loginManager.isLogin {
+            NavigationStack {
+                HomeTabbarView()
+            }
+        } else {
+            NavigationStack {
+                HomeTabbarView()
             }
         }
-        .padding()
+        //        .onAppear {
+        //            let _ = TranslatorManager.shared
+        //        }
     }
 }
 
 #Preview {
-    ContentView(action: {
-        print("cao duc tin")
-    })
+    ContentView()
 }
+

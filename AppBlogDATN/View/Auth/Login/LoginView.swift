@@ -8,42 +8,53 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State var username: String = ""
-    @State var password: String = ""
+    @ObservedObject var loginVM = LoginViewModel()
+    @StateObject var loginManager = UserManager.shared
     var body: some View {
         VStack(spacing: 24) {
             VStack {
                 Text("Your Email")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                TextField("Enter your email", text: $username)
+                TextField("Enter your email", text: $loginVM.email)
                     .frame(height: 50)
                     .textFieldStyle(.outline())
                     .autocorrectionDisabled()
+                    .autocapitalization(.none)
                     .previewLayout(.sizeThatFits)
                 
                 Text("Password")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                SecureTextField()
+                SecureTextField(password: $loginVM.password)
             }
-               
-                Button("Continue") {
-                    
-                }.buttonStyle(BorderButton.style(backgroundColor: .primaryColor, cornerRadius: 10))
-           
+            
+            Button("Continue") {
+                loginVM.login()
+            }.buttonStyle(BorderButton.style(backgroundColor: .primaryColor, cornerRadius: 10))
             
             DividerView()
             VStack(spacing: 10) {
                 FooterLoginView()
             }
         }
+        .blur(radius: loginVM.isLoading ? 3 : 0)
         .padding()
+        .alert("Login Failed", isPresented: $loginVM.isError, actions: {
+            Button("OK", role: .cancel) {
+                loginVM.isError = false
+            }
+        }, message: {
+            Text(loginVM.errorMessage ?? "Unknown error")
+        })
     }
 }
 
 #Preview {
-    LoginView()
+    NavigationStack {
+        LoginView()
+    }
+    
 }
 
 struct BorderButton: ButtonStyle {
@@ -65,49 +76,3 @@ struct BorderButton: ButtonStyle {
     }
     
 }
-//struct PageView: View {
-//    @State private var currentPage = 0
-//
-//    var body: some View {
-//        VStack {
-//            TabView(selection: $currentPage) {
-//                Text("Sign In Page")
-//                    .font(.largeTitle)
-//                    .tag(0)
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                    .background(Color.blue.opacity(0.3))
-//
-//                Text("Sign Up Page")
-//                    .font(.largeTitle)
-//                    .tag(1)
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                    .background(Color.green.opacity(0.3))
-//            }
-//            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)) // Ẩn dot indicator
-//
-//            HStack(spacing: 20) {
-//                Button("Sign In") {
-//                    currentPage = 0
-//                }
-//                .padding()
-//                .background(Color.blue)
-//                .foregroundColor(.white)
-//                .cornerRadius(10)
-//
-//                Button("Sign Up") {
-//                    currentPage = 1
-//                }
-//                .padding()
-//                .background(Color.green)
-//                .foregroundColor(.white)
-//                .cornerRadius(10)
-//            }
-//            .padding()
-//        }
-//    }
-//}
-//
-//#Preview {
-//    PageView()
-//}
-

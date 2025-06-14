@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		77208CA02DB695A700F9A61E /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 77208C9F2DB695A700F9A61E /* FirebaseFirestore */; };
+		77C5EC452DE6214E00AD1519 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 77C5EC442DE6214E00AD1519 /* Alamofire */; };
+		77F46D2E2DD03FE900EC18DE /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 77F46D2D2DD03FE900EC18DE /* SDWebImageSwiftUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,6 +28,19 @@
 			remoteInfo = AppBlogDATN;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		77A4F4C02DFC89B0003B3E1E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		77208C6C2DB68B7B00F9A61E /* AppBlogDATN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppBlogDATN.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -56,6 +71,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77C5EC452DE6214E00AD1519 /* Alamofire in Frameworks */,
+				77F46D2E2DD03FE900EC18DE /* SDWebImageSwiftUI in Frameworks */,
 				77208CA02DB695A700F9A61E /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,6 +101,7 @@
 				77208C7F2DB68B7E00F9A61E /* AppBlogDATNTests */,
 				77208C892DB68B7E00F9A61E /* AppBlogDATNUITests */,
 				77208C6D2DB68B7B00F9A61E /* Products */,
+				B58F0C55A18EDE32124EB3B3 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -97,6 +115,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		B58F0C55A18EDE32124EB3B3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -107,6 +132,7 @@
 				77208C682DB68B7B00F9A61E /* Sources */,
 				77208C692DB68B7B00F9A61E /* Frameworks */,
 				77208C6A2DB68B7B00F9A61E /* Resources */,
+				77A4F4C02DFC89B0003B3E1E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -118,6 +144,8 @@
 			name = AppBlogDATN;
 			packageProductDependencies = (
 				77208C9F2DB695A700F9A61E /* FirebaseFirestore */,
+				77F46D2D2DD03FE900EC18DE /* SDWebImageSwiftUI */,
+				77C5EC442DE6214E00AD1519 /* Alamofire */,
 			);
 			productName = AppBlogDATN;
 			productReference = 77208C6C2DB68B7B00F9A61E /* AppBlogDATN.app */;
@@ -140,8 +168,6 @@
 				77208C7F2DB68B7E00F9A61E /* AppBlogDATNTests */,
 			);
 			name = AppBlogDATNTests;
-			packageProductDependencies = (
-			);
 			productName = AppBlogDATNTests;
 			productReference = 77208C7C2DB68B7E00F9A61E /* AppBlogDATNTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -163,8 +189,6 @@
 				77208C892DB68B7E00F9A61E /* AppBlogDATNUITests */,
 			);
 			name = AppBlogDATNUITests;
-			packageProductDependencies = (
-			);
 			productName = AppBlogDATNUITests;
 			productReference = 77208C862DB68B7E00F9A61E /* AppBlogDATNUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -203,6 +227,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				77208C9E2DB695A700F9A61E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				77F46D2C2DD03FE900EC18DE /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				77C5EC432DE6214E00AD1519 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 77208C6D2DB68B7B00F9A61E /* Products */;
@@ -405,7 +431,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AppBlogDATN/Preview Content\"";
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -433,7 +461,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AppBlogDATN/Preview Content\"";
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -571,6 +601,22 @@
 				minimumVersion = 11.11.0;
 			};
 		};
+		77C5EC432DE6214E00AD1519 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+		77F46D2C2DD03FE900EC18DE /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -578,6 +624,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 77208C9E2DB695A700F9A61E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		77C5EC442DE6214E00AD1519 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 77C5EC432DE6214E00AD1519 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		77F46D2D2DD03FE900EC18DE /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 77F46D2C2DD03FE900EC18DE /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
