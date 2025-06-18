@@ -114,4 +114,8 @@ class CommentViewModel: ObservableObject {
             return updated
         }
     }
+    
+    func translateComment() {
+        
+    }
 }

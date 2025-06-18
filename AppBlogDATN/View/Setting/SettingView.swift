@@ -10,19 +10,16 @@ import Translation
 
 struct SettingView: View {
     let listSetting = ["home", "remote"]
+    let isLogin = UserManager.shared.isLogin
     var body: some View {
         VStack {
-            Button {
-                UserManager.shared.logout()
-            } label: {
-                Text("Logout")
-            }
-
             List {
                 Section(content: {
                     ForEach(SettingOptions.allCases) { value in
                         NavigationLink(destination: value.destination) {
                             Label(value.infoSettingOption.name, systemImage: value.infoSettingOption.icon)
+                                .font(.title2)
+                                .padding(.vertical, 8)
                         }
                     }
                 }, header: {
@@ -30,8 +27,22 @@ struct SettingView: View {
                         .font(.headline)
                         .foregroundColor(.gray)
                 })
-            }.listStyle(.grouped)
+            }
+            .scrollDisabled(true)
+            .background(.red)
+            .listStyle(.grouped)
             
+            Button {
+                if isLogin {
+                    UserManager.shared.logout()
+                } else {
+                    //Navigation link to navigaiton 
+                }
+            } label: {
+                Text(isLogin ? "Logout" : "Sign up")
+            }
+            .padding()
+            .buttonStyle(BorderButton(backgroundColor: .blue))
         }
     }
 }
@@ -41,7 +52,6 @@ struct SettingView: View {
         SettingView()
     }
 }
-
 
 enum SettingOptions: String, CaseIterable, Identifiable {
     case language
@@ -81,13 +91,13 @@ enum SettingOptions: String, CaseIterable, Identifiable {
     var destination: some View {
         switch self {
         case .language:
-            HomeTabbarView()
+            LanguageSettingView()
         case .information:
-            HomeTabbarView()
+            PostHomeView()
         case .savePost:
-            HomeTabbarView()
+            PostHomeView()
         case .userInfo:
-            HomeTabbarView()
+            ProfileView()
         }
     }
 }

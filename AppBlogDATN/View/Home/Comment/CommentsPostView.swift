@@ -15,27 +15,27 @@ struct CommentsPostView: View {
     var body: some View {
         ZStack(alignment: .top) {
             VStack(spacing: 0) {
-                Divider() // 👉 Vạch trên
-
+                Divider()
+                
                 VStack(spacing: 16) {
                     if commentVM.isLoading {
-                        ProgressView("Loading comments...")
+                        ProgressView("Đang tải comment...")
                             .frame(maxWidth: .infinity)
                             .padding()
                     } else if commentVM.comments.isEmpty {
-                        Text("Chưa có bình luận nào")
+                        Text("Chưa có bình luận nào.")
                             .frame(maxWidth: .infinity)
                             .foregroundColor(.gray)
                             .italic()
                     } else {
                         HStack {
-                            Text("Comment")
+                            Text("Bình luận")
                             Spacer()
-                            Text("See all")
+                            Text("Xem tất cả")
                         }
                         .font(.headline)
                         .padding(.bottom, 4)
-
+                        
                         LazyVStack(alignment: .leading, spacing: 12) {
                             ForEach($commentVM.comments, id: \.id) { comment in
                                 PostCommentView(commentPost: comment, onLikeTapped: like) { comment in
@@ -47,7 +47,7 @@ struct CommentsPostView: View {
                     }
                 }
                 .padding(.vertical, 12)
-
+                
                 Divider()
             }
         }
@@ -65,7 +65,7 @@ struct CommentsPostView: View {
             }
         }
     }
-
+    
 }
 
 private extension CommentsPostView {

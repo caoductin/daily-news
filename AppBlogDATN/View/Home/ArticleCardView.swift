@@ -34,7 +34,7 @@ struct ArticleCardView: View {
             } else {
                 Color.gray
                     .frame(height: 200)
-                    .overlay(Text("Invalid URL").foregroundColor(.white))
+                    .overlay(Text("URL không hợp lệ").foregroundColor(.white))
                     .cornerRadius(10)
                     .padding(.vertical, 10)
             }

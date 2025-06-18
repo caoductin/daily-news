@@ -14,8 +14,16 @@ struct TranslateResponse: Decodable {
     let languageDetected: String
 }
 
-class TranslateViewModel {
+struct TranslateTempResponse: Decodable {
+    let sourceLang: String
+    let targetLang: String
+    let translatedText: String
+}
+
+class TranslateViewModel: ObservableObject {
     static let shared = TranslateViewModel()
+    @Published var isTranslating: Bool = false
+    @Published var originText: String?
     
     func translate(text: String, targetLanguage: String) async throws -> TranslateResponse {
         let body: [String: Any] = [
@@ -30,5 +38,49 @@ class TranslateViewModel {
         )
         return response
     }
+    
+    func translateTemp(text: String, targetLanguage: String) async throws -> TranslateTempResponse {
+        let body: [String: Any] = [
+            "sourceLang": "auto",
+            "targetLang": targetLanguage,
+            "text": text
+        ]
+        let response: TranslateTempResponse = try await APIServices.shared.sendRequestForTemp(
+            from: "https://mimamoriai.com/api/translation/text",
+            type: TranslateTempResponse.self,
+            method: .POST,
+            body: body
+        )
+        return response
+    }
+    
+    func translateForLang(_ originText: String, _ lang: SupportedLang) async -> String {
+        print("🔁 Bắt đầu dịch sang: \(lang.rawValue)")
+        var resultString = originText
+        let langSnapshot = lang
+        await MainActor.run { isTranslating = true }
+        
+        do {
+            let response = try await TranslateViewModel.shared.translateTemp(
+                text: originText, targetLanguage: langSnapshot.rawValue
+            )
+            resultString = response.translatedText
+            print("this is result\(resultString)")
+            await MainActor.run {
+                isTranslating = false
+            }
+            
+        } catch {
+            await MainActor.run {
+                isTranslating = false
+            }
+            print("❌ Lỗi dịch: \(error)")
+            return error.localizedDescription
+        }
+        return resultString
+    }
+    
+    
+    //https://mimamoriai.com/api/translation/text
     
 }

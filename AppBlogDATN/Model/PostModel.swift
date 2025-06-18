@@ -51,6 +51,29 @@ struct PostPaginatedResponse: Decodable {
     var totalPages: Int
     var totalPosts: Int
 }
+
+extension PostDetailResponse {
+    func translate(_ targetLangue: String) async throws -> PostDetailResponse {
+        func translatePost(_ text: String) async throws -> String {
+            guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                print("chuỗi rỗng")
+                return text
+            }
+            return try await TranslateViewModel.shared.translateTemp(text: text, targetLanguage: targetLangue).translatedText
+            
+        }
+        let translateResult = try await (
+            title: translatePost(self.title),
+            category: translatePost(self.category),
+            content: translatePost(self.content.htmlToPlainString().trimmingCharacters(in: .whitespacesAndNewlines)),
+            slug: translatePost(self.slug)
+        )
+        
+        print("this is translateResult \(translateResult)")
+        return .init(id: UUID().uuidString, userId: userId, content: translateResult.content, category: translateResult.category, title: translateResult.title, slug: slug, image: image, createdAt: createdAt, updatedAt: updatedAt)
+    }
+}
+
 //MARK: MOCK DATA
 
 extension PostDetailResponse {

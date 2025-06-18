@@ -1,0 +1,225 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "%@" : {
+
+    },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%lld" : {
+
+    },
+    "⏳ Đang dịch..." : {
+
+    },
+    "🇪🇸 Spanish (ES)" : {
+
+    },
+    "🇯🇵 Japanese" : {
+
+    },
+    "🇺🇸 English" : {
+
+    },
+    "🇺🇸 English (US)" : {
+
+    },
+    "🇻🇳 Tiếng Việt" : {
+
+    },
+    "🇻🇳 Vietnamese" : {
+
+    },
+    "🌐 Đã dịch:" : {
+
+    },
+    "📄 Nội dung dịch giống nội dung gốc" : {
+
+    },
+    "📄 Nội dung gốc:" : {
+
+    },
+    "🗣️ TTS Demo" : {
+
+    },
+    "1 likes" : {
+
+    },
+    "Bạn có chắc muốn xoá bình luận?" : {
+
+    },
+    "Bạn muốn chuyển ngôn ngữ sang %@?" : {
+
+    },
+    "Bình luận" : {
+
+    },
+    "Cập nhật" : {
+
+    },
+    "Chọn ngôn ngữ" : {
+
+    },
+    "Chưa có bình luận nào." : {
+
+    },
+    "Conform password" : {
+
+    },
+    "Continue" : {
+
+    },
+    "Continue with Google" : {
+
+    },
+    "Đang tải comment..." : {
+
+    },
+    "Đang tải và nhận diện..." : {
+
+    },
+    "Dịch ảnh" : {
+
+    },
+    "Email" : {
+
+    },
+    "Enter your email" : {
+
+    },
+    "Giọng" : {
+
+    },
+    "Hệ thống" : {
+
+    },
+    "Hello, World!" : {
+
+    },
+    "Home" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhà"
+          }
+        }
+      }
+    },
+    "Huỷ" : {
+
+    },
+    "Invalid URL" : {
+
+    },
+    "Loading..." : {
+
+    },
+    "Login Failed" : {
+
+    },
+    "Login with apple" : {
+
+    },
+    "Logout" : {
+
+    },
+    "Mật khẩu" : {
+
+    },
+    "Nam" : {
+
+    },
+    "Ngôn ngữ" : {
+
+    },
+    "Ngôn ngữ đích" : {
+
+    },
+    "Nhập lại mật khẩu" : {
+
+    },
+    "Nội dung văn bản" : {
+
+    },
+    "Nữ" : {
+
+    },
+    "OK" : {
+
+    },
+    "Or" : {
+
+    },
+    "Password" : {
+
+    },
+    "Register" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Sign In View" : {
+
+    },
+    "Sign up" : {
+
+    },
+    "Sign Up View" : {
+
+    },
+    "Stop" : {
+
+    },
+    "test" : {
+
+    },
+    "Thay đổi" : {
+
+    },
+    "Tìm kiếm ngôn ngữ..." : {
+
+    },
+    "Tốc độ" : {
+
+    },
+    "URL không hợp lệ" : {
+
+    },
+    "User name" : {
+
+    },
+    "Viết bình luận..." : {
+
+    },
+    "Xem tất cả" : {
+
+    },
+    "Xoá" : {
+
+    },
+    "Your Email" : {
+
+    }
+  },
+  "version" : "1.0"
+}

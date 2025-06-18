@@ -56,6 +56,26 @@ struct CommentResquest: Encodable {
     var userId: String
 }
 
+extension CommentResponse {
+    func translate(_ targetLangue: String) async throws -> CommentResponse {
+        func translateComment(_ text: String) async throws -> String {
+            guard !text.isEmpty || !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                print("chuỗi rỗng")
+                return text
+            }
+            return try await TranslateViewModel.shared.translateTemp(text: text, targetLanguage: targetLangue).translatedText
+            
+        }
+        let translateResult = try await (
+            translateComment(self.content)
+        )
+        
+        print("this is comment \(translateResult)")
+        return .init(id: id, content: translateResult, postId: postId, userId: userId, likes: likes, numberOfLikes: numberOfLikes, createdAt: createdAt, updatedAt: updatedAt, userInfo: userInfo, isLikedByCurrentUser: isLikedByCurrentUser)
+    }
+
+}
+
 //
 //[
 //    {

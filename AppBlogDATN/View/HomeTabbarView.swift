@@ -9,18 +9,18 @@ import Foundation
 import SwiftUI
 
 enum Tab: CaseIterable{
-    case home, create , profile, bookmark
+    case home, create ,bookmark ,setting
     
     var title: String {
         switch self {
         case .home:
-            return "Home"
+            return "Home".localized
         case .create:
             return "Create"
-        case .profile:
-            return "profile"
         case .bookmark:
-            return "bookmark"
+            return "Bookmark"
+        case .setting:
+            return "Setting"
         }
     }
     
@@ -32,8 +32,8 @@ enum Tab: CaseIterable{
             return "folder.badge.plus"
         case .bookmark:
             return "person.crop.circle.fill"
-        case .profile:
-            return "person.crop.circle.fill"
+        case .setting:
+            return "gearshape"
         }
     }
 }
@@ -47,13 +47,13 @@ struct HomeTabbarView: View {
                 Group {
                     switch selectedTab {
                     case .home:
-                        PostHomeView()
+                        HomeTabView()
                     case .create:
                         PostHomeView()
                     case .bookmark:
+                        PostHomeView()
+                    case .setting:
                         SettingView()
-                    case .profile:
-                        ProfileView()
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -63,7 +63,6 @@ struct HomeTabbarView: View {
                 CustomTabbar(selected: $selectedTab)
             }
             .background(Color(.systemGray6))
-            .shadow(radius: 5)
         }
     }
 }

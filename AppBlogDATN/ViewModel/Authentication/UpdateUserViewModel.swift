@@ -1,14 +1,14 @@
 //
-//  LoginViewModel.swift
+//  UpdateUserViewModel.swift
 //  AppBlogDATN
 //
-//  Created by cao duc tin  on 10/6/25.
+//  Created by cao duc tin  on 14/6/25.
 //
 
 import Foundation
 
 @MainActor
-class LoginViewModel: ObservableObject {
+class UpdateUserViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = ""
     @Published var isLoading = false
@@ -17,7 +17,7 @@ class LoginViewModel: ObservableObject {
     @Published var isError: Bool = false
     private let authService = AuthService()
     
-    func login() {
+    func updateUser() {
         isLoading = true
        
         userData = UserData.setUser(userName: "", email: email, password: password)

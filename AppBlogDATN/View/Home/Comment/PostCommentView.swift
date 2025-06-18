@@ -33,7 +33,7 @@ struct PostCommentView: View {
                             onDeleteTapped?(commentPost)
                         }
                         label: {
-                            Label("Delete", systemImage: "message")
+                            Label("Xoá", systemImage: "message")
                         }
                         Button {
                             if UserManager.shared.isLogin {
@@ -75,6 +75,6 @@ struct AvatarView: View {
 
 extension PostCommentView {
     private func getUserName() -> String {
-        return UserManager.shared.currentUser?.username ?? "Unkown User"
+        return UserManager.shared.currentUser?.username ?? "Không xác định"
     }
 }

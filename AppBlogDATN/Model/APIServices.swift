@@ -115,6 +115,34 @@ class APIServices {
         return try decoder.decode(T.self, from: data)
     }
     
+    func sendRequestForTemp<T: Decodable>(
+        from fullURL: String,
+        type: T.Type,
+        method: HTTPMethod = .GET,
+        body: [String: Any]? = nil,
+        headers: [String: String] = [:]
+    ) async throws -> T {
+        let bodyData = body != nil ? try JSONSerialization.data(withJSONObject: body!) : nil
+        let url = URL(string: fullURL)!
+        let request = createRequest(url: url, method: method.rawValue, body: bodyData, headers: headers)
+        
+        print("this is full uRL \(url)")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+        
+        if !(200..<300).contains(httpResponse.statusCode) {
+            if let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: data) {
+                throw APIError.server(message: errorResponse.message)
+            } else {
+                throw APIError.unknown(statusCode: httpResponse.statusCode)
+            }
+        }
+        let decoder = JSONDecoder()
+        return try decoder.decode(T.self, from: data)
+    }
+    
     func sendRequest<T: Decodable, B: Encodable>(
         from endpoint: String,
         type: T.Type,
