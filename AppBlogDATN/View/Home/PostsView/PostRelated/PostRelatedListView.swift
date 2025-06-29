@@ -14,8 +14,8 @@ struct PostRelatedListView: View {
     
     
     var body: some View {
-        VStack {
-            LazyVStack(spacing: 20) {
+        VStack(alignment: .leading) {
+            LazyVStack(alignment: .leading, spacing: 20) {
                 ForEach(viewModel.postsRelated) { postRelated in
                     Button {
                         selectedPost = postRelated
@@ -30,5 +30,4 @@ struct PostRelatedListView: View {
             }
     }
 }
-
 

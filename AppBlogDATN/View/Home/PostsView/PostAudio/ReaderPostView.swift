@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftUI
 
 struct SpeechTestView: View {
-    @State private var viewModel = SpeechViewModel.shared
+    @State private var viewModel = SpeechViewModel()
     @State private var showVolumeSlider = false
     var selectedLanguage: String = "vi"
     var textToSpeech: String
@@ -26,8 +26,6 @@ struct SpeechTestView: View {
     }
     var body: some View {
         VStack {
-            LanguagePickerView(selectedLanguage: $viewModel.selectedLanguage)
-
             HStack(spacing: 0) {
                 HStack(spacing: 0) {
                     Picker("Giọng", selection: $viewModel.voicePreference) {
@@ -120,18 +118,16 @@ struct VolumeMenuButton: View {
                     .padding(8)
             }
 
-            // Overlay toàn màn hình để tap ra ngoài và đóng
             if showMenu {
                 Color.clear
                     .ignoresSafeArea()
-                    .contentShape(Rectangle()) // Bắt gesture khắp vùng trống
+                    .contentShape(Rectangle())
                     .onTapGesture {
                         withAnimation {
                             showMenu = false
                         }
                     }
 
-                // Menu trượt dọc
                 VStack(spacing: 6) {
                     Slider(value: $volume, in: 0...1)
                         .rotationEffect(.degrees(-90))
@@ -151,26 +147,6 @@ struct VolumeMenuButton: View {
     }
 }
 
-
-
-// 🌐 Language Picker View Component
-struct LanguagePickerView: View {
-    @Binding var selectedLanguage: String
-
-    var body: some View {
-        Picker("Ngôn ngữ", selection: $selectedLanguage) {
-            Text("🇺🇸 English (US)").tag("en-US")
-            Text("🇪🇸 Spanish (ES)").tag("es-ES")
-            Text("🇻🇳 Vietnamese").tag("vi-VN")
-        }
-        .pickerStyle(.segmented)
-    }
-}
-
-//
-//#Preview {
-//    SpeechTestView()
-//}
 
 import AVFoundation
 import Foundation

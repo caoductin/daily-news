@@ -9,32 +9,28 @@ import SwiftUI
 
 struct LanguageSettingView: View {
     @StateObject var viewModel = LanguageSettingViewModel()
-
+    
     var body: some View {
         VStack(spacing: 16) {
-            Text("Chọn ngôn ngữ")
-                .font(.title2.bold())
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-
             TextField("Tìm kiếm ngôn ngữ...", text: $viewModel.searchText)
                 .font(.title3)
                 .textFieldStyle(.outline())
                 .padding(.horizontal)
-
+            
+            // Danh sách ngôn ngữ
             List {
-                Section {
+                Section(header: Text("Ngôn ngữ")) {
                     ForEach(viewModel.filteredLanguages) { lang in
                         HStack {
                             Text("\(lang.flag) \(lang.displayName)")
-                                .font(.system(size: 17, weight: .medium))
+                                .font(.system(size: 18, weight: .medium))
                             Spacer()
                             if lang == viewModel.selectedLang {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundColor(.blue)
                             }
                         }
-                        .padding(.vertical, 10)
+                        .padding(.vertical, 8)
                         .contentShape(Rectangle())
                         .onTapGesture {
                             viewModel.requestSelect(lang: lang)
@@ -42,12 +38,13 @@ struct LanguageSettingView: View {
                     }
                 }
             }
-            .listStyle(.plain)
-            .padding()
+            .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
+            .background(Color(.systemGroupedBackground))
         }
         .background(Color(.systemGroupedBackground))
         .navigationTitle("Ngôn ngữ")
+        .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog(
             "Bạn muốn chuyển ngôn ngữ sang \(viewModel.pendingLang?.displayName ?? "")?",
             isPresented: $viewModel.showConfirmDialog,
@@ -98,4 +95,9 @@ enum SupportedLang: String, CaseIterable, Identifiable {
         case .chinese: return "🇨🇳"
         }
     }
+    
+    static func from(lang: String) -> SupportedLang? {
+        return SupportedLang.allCases.first { $0.rawValue == lang }
+    }
+    
 }

@@ -10,11 +10,11 @@ import SwiftUI
 struct PostCategoryTestView: View {
     @State private var currentCategory: CategoryTab = .home
     @State private var viewModel = PostViewModel()
-
+    
     var body: some View {
         VStack(spacing: 0) {
             TopTab1(tabs: CategoryTab.allCases, currentTab: $currentCategory)
-
+            
             TabView(selection: $currentCategory) {
                 ForEach(CategoryTab.allCases) { category in
                     if category == .home {

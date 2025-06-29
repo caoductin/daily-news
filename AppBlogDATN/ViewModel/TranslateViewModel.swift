@@ -55,7 +55,6 @@ class TranslateViewModel: ObservableObject {
     }
     
     func translateForLang(_ originText: String, _ lang: SupportedLang) async -> String {
-        print("🔁 Bắt đầu dịch sang: \(lang.rawValue)")
         var resultString = originText
         let langSnapshot = lang
         await MainActor.run { isTranslating = true }

@@ -20,40 +20,19 @@
     "%lld" : {
 
     },
-    "⏳ Đang dịch..." : {
+    "📤 Chia sẻ ứng dụng" : {
 
     },
-    "🇪🇸 Spanish (ES)" : {
-
-    },
-    "🇯🇵 Japanese" : {
-
-    },
-    "🇺🇸 English" : {
-
-    },
-    "🇺🇸 English (US)" : {
-
-    },
-    "🇻🇳 Tiếng Việt" : {
-
-    },
-    "🇻🇳 Vietnamese" : {
-
-    },
-    "🌐 Đã dịch:" : {
-
-    },
-    "📄 Nội dung dịch giống nội dung gốc" : {
-
-    },
-    "📄 Nội dung gốc:" : {
+    "📸 Chọn ảnh từ thư viện" : {
 
     },
     "🗣️ TTS Demo" : {
 
     },
     "1 likes" : {
+
+    },
+    "Ảnh minh họa" : {
 
     },
     "Bạn có chắc muốn xoá bình luận?" : {
@@ -68,9 +47,6 @@
     "Cập nhật" : {
 
     },
-    "Chọn ngôn ngữ" : {
-
-    },
     "Chưa có bình luận nào." : {
 
     },
@@ -83,13 +59,22 @@
     "Continue with Google" : {
 
     },
+    "Đang tải ảnh lên..." : {
+
+    },
     "Đang tải comment..." : {
 
     },
     "Đang tải và nhận diện..." : {
 
     },
+    "Danh mục" : {
+
+    },
     "Dịch ảnh" : {
+
+    },
+    "Đóng" : {
 
     },
     "Email" : {
@@ -99,6 +84,9 @@
 
     },
     "Giọng" : {
+
+    },
+    "Gửi email" : {
 
     },
     "Hệ thống" : {
@@ -125,6 +113,9 @@
       }
     },
     "Huỷ" : {
+
+    },
+    "ℹ️ Giới thiệu" : {
 
     },
     "Invalid URL" : {
@@ -154,7 +145,19 @@
     "Ngôn ngữ đích" : {
 
     },
+    "Người phát triển" : {
+
+    },
+    "Nhà phát triển" : {
+
+    },
     "Nhập lại mật khẩu" : {
+
+    },
+    "Nhập tiêu đề bài viết" : {
+
+    },
+    "Nội dung" : {
 
     },
     "Nội dung văn bản" : {
@@ -170,6 +173,9 @@
 
     },
     "Password" : {
+
+    },
+    "Phiên bản" : {
 
     },
     "Register" : {
@@ -190,16 +196,40 @@
     "Stop" : {
 
     },
+    "Tạo bài viết" : {
+
+    },
+    "Tạo bài viết mới" : {
+
+    },
+    "Tên ứng dụng" : {
+
+    },
     "test" : {
 
     },
     "Thay đổi" : {
 
     },
+    "Thông tin ứng dụng" : {
+
+    },
+    "Tiêu đề" : {
+
+    },
+    "Tìm bài viết..." : {
+
+    },
     "Tìm kiếm ngôn ngữ..." : {
 
     },
     "Tốc độ" : {
+
+    },
+    "Tóm tắt nội dung" : {
+
+    },
+    "Tóm tắt văn bản" : {
 
     },
     "URL không hợp lệ" : {
@@ -211,10 +241,16 @@
     "Viết bình luận..." : {
 
     },
+    "Website" : {
+
+    },
     "Xem tất cả" : {
 
     },
     "Xoá" : {
+
+    },
+    "Xoá post" : {
 
     },
     "Your Email" : {

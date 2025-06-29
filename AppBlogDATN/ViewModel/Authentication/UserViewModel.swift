@@ -17,6 +17,10 @@ class UserManager: ObservableObject {
     private var tokenManager = TokenManager.shared
     private let userKey = "userKey"
     
+    init() {
+        loadUser()
+    }
+    
     func login(authen: AuthResponse) {
         isLogin = true
         currentUser = authen.user

@@ -17,6 +17,8 @@ enum HTTPMethod: String {
 
 enum APIEndpoint {
     case getPosts
+    case getPostsForUserId(userId: String)
+    case deletePost(postId: String, userId: String)
     case getUser(id: String)
     case createPost
     case getComments(postId: String)
@@ -32,8 +34,12 @@ enum APIEndpoint {
             return "/api/post/getposts"
         case .getUser(let id):
             return "/api/users/\(id)"
+        case .getPostsForUserId(let userId):
+            return "/api/post/getposts?userId=\(userId)"
+        case .deletePost(let postId,let userId):
+            return "/api/post/deletepost/\(postId)/\(userId)"
         case .createPost:
-            return "/api/posts"
+            return "/api/post/create"
         case .getComments(let postId):
             return "/api/comment/getPostComments/\(postId)"
         case .createComment:
@@ -51,6 +57,24 @@ enum APIEndpoint {
     
     var url: URL {
         return URL(string: "http://localhost:3000\(path)")!
+    }
+    
+    var rawString: String {
+        return "http://localhost:3000\(path)"
+    }
+}
+
+enum URLAdvance {
+    case sumaryText
+    case translate
+    
+    var rawString: String {
+        switch self {
+        case .sumaryText:
+            return "https://ductincao-pegasus-fastapi.hf.space/summarize"
+        case .translate:
+            return ""
+        }
     }
 }
 
@@ -79,6 +103,7 @@ class APIServices {
         
         if let token = TokenManager.shared.accessToken {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            print("xxx \(token)")
         }
         
         headers.forEach { key, value in
@@ -124,8 +149,8 @@ class APIServices {
     ) async throws -> T {
         let bodyData = body != nil ? try JSONSerialization.data(withJSONObject: body!) : nil
         let url = URL(string: fullURL)!
-        let request = createRequest(url: url, method: method.rawValue, body: bodyData, headers: headers)
-        
+        var request = createRequest(url: url, method: method.rawValue, body: bodyData, headers: headers)
+        request.timeoutInterval = 200
         print("this is full uRL \(url)")
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse else {

@@ -11,7 +11,7 @@ import Vision
 struct DetectedTextBox: Identifiable {
     let id = UUID()
     let originalText: String
-    let boundingBox: CGRect // Normalized
+    let boundingBox: CGRect
     var translatedText: String? = nil
 }
 
@@ -68,8 +68,8 @@ class ImageTranslateViewModel: ObservableObject {
     @Published var image: UIImage?
     @Published var detectedTextBoxes: [DetectedTextBox] = []
     @Published var isLoading: Bool = false
-    @Published var selectedLang: String = "vi"
-    
+    @Published var selectedLang: SupportedLang = .vietnamese
+    private var cachesImageTranslate: [SupportedLang: [DetectedTextBox]] = [:]
     private var imageURL: URL
     
     init(imageURL: URL) {
@@ -104,9 +104,13 @@ class ImageTranslateViewModel: ObservableObject {
     func translateAllTexts() {
         guard !detectedTextBoxes.isEmpty else { return }
         
+        if let translateImage = cachesImageTranslate[selectedLang] {
+            
+        }
+        
         for (index, box) in detectedTextBoxes.enumerated() {
             Task {
-                let result = try await TranslateViewModel.shared.translateTemp(text: box.originalText, targetLanguage: selectedLang)
+                let result = try await TranslateViewModel.shared.translateTemp(text: box.originalText, targetLanguage: selectedLang.rawValue)
                 await MainActor.run {
                     self.detectedTextBoxes[index].translatedText = result.translatedText
                 }
@@ -131,7 +135,7 @@ struct OverlayBoxView: View {
                 
                 if let translated = box.translatedText {
                     Text(translated)
-                        .font(.system(size: 1000)) // Số lớn để scale xuống
+                        .font(.system(size: 100)) // Số lớn để scale xuống
                         .minimumScaleFactor(0.01) // Scale nhỏ lại để vừa khung
                         .lineLimit(nil)
                         .multilineTextAlignment(.center)
@@ -170,31 +174,32 @@ struct ImageTranslateView: View {
             .onEnded {
                 withAnimation(.easeInOut) {
                     if zoomScale == 1.0 {
-                        zoomScale = 2.5
+                        zoomScale = 3
                     } else {
                         zoomScale = 1.0
                     }
                 }
             }
         return VStack {
-            Picker("Ngôn ngữ đích", selection: $viewModel.selectedLang) {
-                Text("🇻🇳 Tiếng Việt").tag("vi")
-                Text("🇺🇸 English").tag("en")
-                Text("🇯🇵 Japanese").tag("ja")
-            }
-            .pickerStyle(.menu)
-            .padding()
-            
-            Toggle("Hiển thị bản dịch", isOn: $showTranslated)
-                .padding(.horizontal)
-                .padding(.bottom, 5)
-                .disabled(viewModel.image == nil || viewModel.detectedTextBoxes.isEmpty)
-                .onChange(of: showTranslated) { newValue in
-                    if newValue {
-                        viewModel.translateAllTexts()
+            HStack {
+                Picker("Ngôn ngữ đích", selection: $viewModel.selectedLang) {
+                    ForEach(SupportedLang.allCases) { lang in
+                        Text("\(lang.flag) \(lang.displayName)").tag(lang)
                     }
                 }
-            
+                .pickerStyle(.menu)
+                .padding()
+                
+                Toggle("", isOn: $showTranslated)
+                    .padding(.horizontal)
+                    .padding(.bottom, 5)
+                    .disabled(viewModel.image == nil || viewModel.detectedTextBoxes.isEmpty)
+                    .onChange(of: showTranslated) { old, newValue in
+                        if newValue {
+                            viewModel.translateAllTexts()
+                        }
+                    }
+            }
             if viewModel.isLoading {
                 ProgressView("Đang tải và nhận diện...")
             } else if let image = viewModel.image {
@@ -241,7 +246,7 @@ struct ImageTranslateView: View {
             
             Spacer()
         }
-        .onChange(of: viewModel.selectedLang) { newLang in
+        .onChange(of: viewModel.selectedLang) { oldLang, newLang in
             if showTranslated {
                 viewModel.translateAllTexts()
             }

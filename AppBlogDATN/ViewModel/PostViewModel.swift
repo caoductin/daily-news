@@ -18,6 +18,13 @@ class PostViewModel {
     var isLoading = false
     var currentPage = 1
     var totalPages = 1
+    var searchText: String = "" {
+        didSet {
+            print("debound search")
+            debounceSearch()
+        }
+    }
+    private var debounceTask: Task<Void, Never>?
     
     var selectedCategory: CategoryTab = .home {
         didSet {
@@ -89,6 +96,7 @@ class PostViewModel {
         do {
             let response = try await APIServices.shared.sendRequest(from: APIEndpoint.getPosts, type: PostResponse.self, method: .GET)
             self.allPosts = response.posts
+            self.filteredPosts = response.posts
             self.allPosts = response.posts
         } catch(let error) {
             print("lỗi tải bài\(error.localizedDescription)")
@@ -119,6 +127,26 @@ class PostViewModel {
         print("this is postRelated \(postRelated.map{ $0.title }) - \(postId)")
         postsRelated = postRelated
     }
+    
+    //MARK: SEARCH
+    
+    private func debounceSearch() {
+        debounceTask?.cancel()
+        debounceTask = Task {
+            try? await Task.sleep(nanoseconds: 500_000_000) // 500ms debounce
+            await MainActor.run {
+                self.searchPosts(query: self.searchText)
+            }
+        }
+    }
+
+    func searchPosts(query: String) {
+        if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            filteredPosts = allPosts
+        } else {
+            filteredPosts = allPosts.filter {
+                $0.title.localizedCaseInsensitiveContains(query)
+            }
+        }
+    }
 }
-
-

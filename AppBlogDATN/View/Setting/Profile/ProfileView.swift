@@ -17,7 +17,7 @@ struct ProfileView: View {
                 .clipShape(Circle())
             VStack(spacing: 8) {
                 Text(userVM.currentUser?.username ?? "Không xác định")
-                Text("Your Email")
+                Text("Email")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
                 TextField(email, text: $email)

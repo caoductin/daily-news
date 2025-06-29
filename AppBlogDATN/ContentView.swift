@@ -15,15 +15,11 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             Group {
-//                if loginManager.isLogin {
-                if let url = URL(string: "https://sharelatex-wiki-cdn-671420.c.cdn77.org/learn-scripts/images/5/5f/Ragged2eOLV21.png") {
-                    ImageTranslateView(imageURL: url)
+                if loginManager.isLogin {
+                    HomeTabbarView()
                 } else {
-                    Text("URL không hợp lệ")
+                    AuthPageView()
                 }
-//                } else {
-//                    AuthPageView()
-//                }
             }
             .id(reloadID)
         }

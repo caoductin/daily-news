@@ -56,8 +56,9 @@ struct SettingView: View {
 enum SettingOptions: String, CaseIterable, Identifiable {
     case language
     case information
-    case savePost
+    case createPost
     case userInfo
+    case managerPost
     
     var id: String { self.rawValue}
     
@@ -67,8 +68,10 @@ enum SettingOptions: String, CaseIterable, Identifiable {
             "language"
         case .information:
             "information"
-        case .savePost:
-            "savePost"
+        case .createPost:
+            "createPost"
+        case .managerPost:
+            "managerPost"
         case .userInfo:
             "userInfo"
         }
@@ -80,8 +83,10 @@ enum SettingOptions: String, CaseIterable, Identifiable {
             ("Language", "globe")
         case .information:
             ("Information", "info.circle")
-        case .savePost:
-            ("Save Post", "square.and.arrow.down.fill")
+        case .createPost:
+            ("Create Post", "square.and.arrow.down.fill")
+        case .managerPost:
+            ("Manager Post","trash")
         case .userInfo:
             ("User Infomation", "person.fill")
         }
@@ -93,9 +98,11 @@ enum SettingOptions: String, CaseIterable, Identifiable {
         case .language:
             LanguageSettingView()
         case .information:
-            PostHomeView()
-        case .savePost:
-            PostHomeView()
+            AppInformationView()
+        case .createPost:
+            PostCreateView()
+        case .managerPost:
+            PostDeleteView()
         case .userInfo:
             ProfileView()
         }

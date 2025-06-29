@@ -8,6 +8,12 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
+enum NavigationRoute: Hashable {
+    case imageDetail(URL)
+    case userProfile(String)
+    case settings
+}
+
 struct PostDetailView: View {
     @StateObject var commentsPost: CommentViewModel = CommentViewModel()
     @StateObject var postRelatedVM: PostRelatedViewModel = PostRelatedViewModel()
@@ -17,68 +23,72 @@ struct PostDetailView: View {
     @State private var commentText = ""
     @State private var previousLang: SupportedLang = .vietnamese
     @State private var viewModel: PostDetailViewModel
-    
     init(post: PostDetailResponse) {
         _viewModel = State(wrappedValue: PostDetailViewModel(post: post))
     }
     
+    @State private var isSummaryDialogPresented = false
+    @State private var isSummaryText: Bool = false
     var body: some View {
-        VStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
-                    SpeechTestView(selectedLanguage: selectedLang.rawValue, textToSpeech: viewModel.displayingPost.content.htmlToPlainString())
-                    BodyPostView(viewModel: viewModel)
-                        .id(viewModel.displayingPost.id)
-                    
-                    CommentsPostView(commentVM: commentsPost)
-                    
-                    PostRelatedListView(viewModel: postRelatedVM) { selectedPost in
-                        relatedPostToNavigate = selectedPost
+        ZStack {
+            VStack {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 10) {
+                        SummaryButtonView(summaryText: $viewModel.sumaryText, isSummarizing: $isSummaryText) {
+                                viewModel.summaryText(to: selectedLang) {
+                                    isSummaryDialogPresented = true
+                                    isSummaryText = false
+                            }
+                        }
+                        SpeechTestView(selectedLanguage: selectedLang.rawValue, textToSpeech: viewModel.displayingPost.content)
+                        BodyPostView(viewModel: viewModel)
+                            .id(viewModel.displayingPost.id)
+                        CommentsPostView(commentVM: commentsPost)
+                        PostRelatedListView(viewModel: postRelatedVM) { selectedPost in
+                            relatedPostToNavigate = selectedPost
+                        }
                     }
                 }
+                .scrollIndicators(.hidden)
+                Divider()
+                CommentInputView(commentText: $commentText, onSend: createComment)
             }
-            .scrollIndicators(.hidden)
-            Divider()
-            CommentInputView(commentText: $commentText, onSend: createComment)
+            .padding(.horizontal)
+            
+            if isSummaryDialogPresented {
+                SummaryDialogView(summaryText: viewModel.sumaryText, isPresented: $isSummaryDialogPresented)
+                    .transition(.opacity.combined(with: .scale))
+                    .zIndex(1)
+            }
         }
-        .padding(.horizontal)
         .withLoadingOverlay($viewModel.isLoading, message: "Đang tải")
-        .onChange(of: viewModel.isLoading, { oldValue, newValue in
-            print("gia tri cu vaf moi ne \(oldValue) \(newValue)")
-        })
-        .onChange(of: viewModel.displayingPost, { oldValue, newValue in
-            print("gia tri moiw ne \(oldValue) \(newValue)")
-        })
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 TranslateToolbarButton(selectedLang: $selectedLang) { lang in
                     Task {
-                        do {
-                            await viewModel.translate(to: lang)
-                            
-                            //                            let translatedComment = try await withThrowingTaskGroup(of: CommentResponse.self) { group in
-                            //                                for comment in commentsPost.comments {
-                            //                                    group.addTask {
-                            //                                        try await comment.translate(lang.rawValue)
-                            //                                    }
-                            //                                }
-                            //
-                            //                                var results: [CommentResponse] = []
-                            //                                for try await result in group {
-                            //                                    results.append(result)
-                            //                                }
-                            //                                return results
-                            //                            }
-                        } catch {
-                            print("Translate error: \(error)")
-                        }
+                        await viewModel.translate(to: lang)
+                
                     }
                 }
             }
         }
         .task {
             loadData()
+            viewModel.isLoading = true
+            let detected = await PostDetailViewModel.detectLanguage(of: viewModel.displayingPost.content.htmlToPlainString())
+            selectedLang = detected ?? .vietnamese
+            print("this is detectTect Language \(detected)")
+            viewModel.isLoading = false
+            
         }
+        //        .navigationDestination(for: NavigationRoute.self, destination: { route in
+        //            switch route {
+        //            case .imageDetail(let url):
+        //                ImageTranslateView(imageURL: url)
+        //            default:
+        //                Text("không có view nào")
+        //            }
+        //        })
         .navigationTitle("test")
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .navigationBarTitleDisplayMode(.inline)
@@ -89,9 +99,9 @@ struct PostDetailView: View {
     let mockPost = PostDetailResponse(
         id: "6824be39121596abb8df7348",
         userId: "user001",
-        content: "this is a market",
+        content: "Liên Hợp Quốc quan ngại về chiến dịch không kích của Mỹ vào Iran.Tôi rất quan ngại về việc Mỹ sử dụng vũ lực chống lại Iran hôm nay.",
         category: "Tech",
-        title: "Understanding Swift Concurrency",
+        title: "The anniversary ",
         slug: "understanding-swift-concurrency",
         image: "https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/09/how-to-write-a-blog-post.png",
         createdAt: "2025-05-20T10:00:00Z",
@@ -126,77 +136,44 @@ extension PostDetailView {
     }
 }
 
-struct TranslationStatusView: View {
-    let isTranslating: Bool
-    let translatedText: String
-    let originalText: String
-    
-    var body: some View {
-        VStack {
-            if isTranslating {
-                Text("⏳ Đang dịch...")
-                    .foregroundColor(.blue)
-            } else if translatedText.isEmpty {
-                Text("📄 Nội dung gốc:")
-                Text(originalText)
-            } else if translatedText == originalText {
-                Text("📄 Nội dung dịch giống nội dung gốc")
-            } else {
-                Text("🌐 Đã dịch:")
-                Text(translatedText)
-            }
-        }
-    }
-}
 
 struct BodyPostView: View {
     @Bindable var viewModel: PostDetailViewModel
+    @State private var selectedImageURL: URL?
     var body: some View {
-        //        ReaderPostView(text: viewModel.displayingPost.content.htmlToPlainString())
-        Text(viewModel.displayingPost.title)
-            .font(.headline)
-            .multilineTextAlignment(.leading)
-        WebImage(url: URL(string: viewModel.displayingPost.image)) { image in
-            image.resizable()
-        } placeholder: {
-            Rectangle().foregroundColor(.gray)
-        }
-        .onSuccess { image, data, cacheType in
+        VStack(alignment: .leading){
+            Text(viewModel.displayingPost.title)
+                .font(.headline)
+                .multilineTextAlignment(.leading)
+            if let url = URL(string: viewModel.displayingPost.image) {
+                WebImage(url: url) { image in
+                    image.resizable()
+                } placeholder: {
+                    Rectangle().foregroundColor(.gray)
+                }
+                .resizable()
+                .indicator(.activity)
+                .aspectRatio(contentMode: .fit)
+                .cornerRadius(8)
+                .onTapGesture {
+                    selectedImageURL = url
+                    print()
+                }
+            }
+            Text(viewModel.displayingPost.content.htmlToPlainString())
             
         }
-        .resizable()
-        .indicator(.activity)
-        .aspectRatio(contentMode: .fit)
-        .cornerRadius(8)
-        Text(viewModel.displayingPost.content.htmlToPlainString())
+        .navigationDestination(item: $selectedImageURL) { post in
+            ImageTranslateView(imageURL: URL(string: viewModel.displayingPost.image)!)
+        }
     }
 }
 
 import Foundation
 import Combine
+import NaturalLanguage
 
-@Observable
-@MainActor
-class PostDetailViewModel {
-    var displayingPost: PostDetailResponse
-    var isLoading: Bool = false
-    
-    init(post: PostDetailResponse) {
-        self.displayingPost = post
-    }
-    
-    func translate(to lang: SupportedLang) async {
-        isLoading = true
-        do {
-            let translated = try await displayingPost.translate(lang.rawValue)
-            displayingPost = translated
-            isLoading = false
-        } catch {
-            isLoading = false
-            print("❌ Translation failed: \(error)")
-        }
-    }
-}
+
 
 
 struct LoadingOverlayModifier: ViewModifier {

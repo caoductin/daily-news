@@ -22,3 +22,23 @@ extension View {
         }
     }
 }
+
+extension View {
+    func navigate<Item: Identifiable, Destination: View>(
+        item: Binding<Item?>,
+        @ViewBuilder destination: @escaping (Item) -> Destination
+    ) -> some View {
+        self
+            .background(
+                NavigationLink(
+                    destination: item.wrappedValue.map { destination($0) },
+                    isActive: Binding(
+                        get: { item.wrappedValue != nil },
+                        set: { if !$0 { item.wrappedValue = nil } }
+                    ),
+                    label: { EmptyView() }
+                )
+                .hidden()
+            )
+    }
+}

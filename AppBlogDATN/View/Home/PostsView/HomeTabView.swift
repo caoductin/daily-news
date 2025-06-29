@@ -31,8 +31,7 @@ struct HomeTabView: View {
             .tabViewStyle(.page(indexDisplayMode: .never))
         }
         .onChange(of: currentCategory) { newTab in
-            withAnimation(.easeInOut) {
-                viewModel.selectedCategory = newTab
+            withAnimation(.easeInOut) {                 viewModel.selectedCategory = newTab
             }
         }
         .task {

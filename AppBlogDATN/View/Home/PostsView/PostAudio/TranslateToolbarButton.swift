@@ -19,7 +19,6 @@ struct TranslateToolbarButton: View {
                 } label: {
                     Label(lang.displayName, systemImage: lang == selectedLang ? "checkmark" : "")
                 }
-                
             }
         } label: {
             Image(systemName: "globe")
