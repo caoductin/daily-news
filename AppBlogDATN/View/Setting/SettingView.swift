@@ -7,49 +7,83 @@
 
 import SwiftUI
 import Translation
-
 struct SettingView: View {
-    let listSetting = ["home", "remote"]
+    @Environment(SettingCoordinator.self) private var settingCoordinator
     let isLogin = UserManager.shared.isLogin
     var body: some View {
         VStack {
             List {
-                Section(content: {
-                    ForEach(SettingOptions.allCases) { value in
-                        NavigationLink(destination: value.destination) {
-                            Label(value.infoSettingOption.name, systemImage: value.infoSettingOption.icon)
-                                .font(.title2)
-                                .padding(.vertical, 8)
-                        }
-                    }
-                }, header: {
-                    Text("Settings")
+                ForEach([SettingCategory.general, .posts, .account], id: \.self) { category in
+                    let options = SettingOptions.allCases.filter { $0.category == category }
+                    Section(header: Text(category.title)
                         .font(.headline)
                         .foregroundColor(.gray)
-                })
-            }
-            .scrollDisabled(true)
-            .background(.red)
-            .listStyle(.grouped)
-            
-            Button {
-                if isLogin {
-                    UserManager.shared.logout()
-                } else {
-                    //Navigation link to navigaiton 
+                    ) {
+                        ForEach(options) { option in
+                            LabelItem(option: option)
+                        }
+                    }
                 }
-            } label: {
-                Text(isLogin ? "Logout" : "Sign up")
             }
-            .padding()
-            .buttonStyle(BorderButton(backgroundColor: .blue))
+            .listStyle(.insetGrouped)
+            .background(.red)
+            FooterView()
         }
+    }
+    
+    @ViewBuilder
+    func FooterView() -> some View {
+        Button {
+            if isLogin {
+                UserManager.shared.logout()
+            } else {
+                //navigation to post
+            }
+            
+        } label: {
+            Text(isLogin ? "Logout" : "Sign up")
+                .font(.headline)
+        }
+        .padding(.horizontal, 16)
+        .buttonStyle(BorderButton(backgroundColor: .blue))
+    }
+    
+    @ViewBuilder
+    func LabelItem(option: SettingOptions) -> some View {
+        Button {
+            settingCoordinator.push(.language)
+        } label: {
+            Label(option.title, systemImage: option.icons)
+                .fontDesign(.rounded)
+                .padding(.vertical, 6)
+        }
+        .buttonStyle(.plain)
     }
 }
 
 #Preview {
     NavigationStack {
-        SettingView()
+        let settingCoordinator = SettingCoordinator()
+        SettingModule(coordinator: settingCoordinator)
+            .environment(SettingCoordinator())
+    }
+}
+
+enum SettingCategory: String, CaseIterable, Identifiable {
+    case general
+    case posts
+    case account
+    
+    var id: String {
+        rawValue
+    }
+    
+    var title: String {
+        switch self {
+        case .account: "Account"
+        case .posts: "Posts"
+        case .general: "General"
+        }
     }
 }
 
@@ -60,41 +94,54 @@ enum SettingOptions: String, CaseIterable, Identifiable {
     case userInfo
     case managerPost
     
-    var id: String { self.rawValue}
+    var id: String { title }
     
     var title: String {
         switch self {
         case .language:
-            "language"
+            "Language"
         case .information:
-            "information"
+            "Information"
         case .createPost:
-            "createPost"
+            "Create Post"
         case .managerPost:
-            "managerPost"
+            "Manage Post"
         case .userInfo:
-            "userInfo"
+            "User Info"
         }
     }
     
-    var infoSettingOption: (name: String,icon:String) {
+    var category: SettingCategory {
+        switch self {
+        case .userInfo:
+            return .account
+        case .language, .information:
+            return .general
+        case .createPost, .managerPost:
+            return .posts
+        }
+    }
+    
+    var icons: String {
         switch self {
         case .language:
-            ("Language", "globe")
+            "globe"
         case .information:
-            ("Information", "info.circle")
+            "info.circle"
         case .createPost:
-            ("Create Post", "square.and.arrow.down.fill")
+            "square.and.arrow.down.fill"
         case .managerPost:
-            ("Manager Post","trash")
+            "trash"
         case .userInfo:
-            ("User Infomation", "person.fill")
+            "person.fill"
         }
     }
     
     @ViewBuilder
     var destination: some View {
         switch self {
+        case .userInfo:
+            ProfileView()
         case .language:
             LanguageSettingView()
         case .information:
@@ -103,8 +150,7 @@ enum SettingOptions: String, CaseIterable, Identifiable {
             PostCreateView()
         case .managerPost:
             PostDeleteView()
-        case .userInfo:
-            ProfileView()
         }
     }
 }
+

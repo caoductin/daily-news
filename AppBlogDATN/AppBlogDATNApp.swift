@@ -19,9 +19,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct AppBlogDATNApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @State var appCoordinator = AppCoordinator()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(appCoordinator)
         }
     }
 }

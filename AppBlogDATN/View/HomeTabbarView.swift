@@ -39,6 +39,7 @@ enum Tab: CaseIterable{
 }
 
 struct HomeTabbarView: View {
+    @Environment(AppCoordinator.self) private var coordinator
     @State private var selectedTab: Tab = .home
     
     var body: some View {
@@ -47,13 +48,15 @@ struct HomeTabbarView: View {
                 Group {
                     switch selectedTab {
                     case .home:
-                        HomeTabView()
+                        HomeModule(coordinator: coordinator.homeCoordinator)
                     case .search:
                         PostSearchView()
+                            .environment(coordinator.homeCoordinator)
                     case .bookmark:
                         PostSearchView()
+                            .environment(coordinator.homeCoordinator)
                     case .setting:
-                        SettingView()
+                        SettingModule(coordinator: coordinator.settingCoordinator)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
