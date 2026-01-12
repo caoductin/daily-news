@@ -12,48 +12,44 @@ struct LanguageSettingView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            TextField("Tìm kiếm ngôn ngữ...", text: $viewModel.searchText)
-                .font(.title3)
-                .textFieldStyle(.outline())
-                .padding(.horizontal)
-            
-            // Danh sách ngôn ngữ
             List {
-                Section(header: Text("Ngôn ngữ")) {
-                    ForEach(viewModel.filteredLanguages) { lang in
-                        HStack {
-                            Text("\(lang.flag) \(lang.displayName)")
-                                .font(.system(size: 18, weight: .medium))
-                            Spacer()
-                            if lang == viewModel.selectedLang {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.blue)
-                            }
+                ForEach(viewModel.filteredLanguages) { lang in
+                    HStack {
+                        Text("\(lang.flag) \(lang.displayName)")
+                            .font(.system(size: 18, weight: .medium))
+                        Spacer()
+                        if lang == viewModel.selectedLang {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.blue)
                         }
-                        .padding(.vertical, 8)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            viewModel.requestSelect(lang: lang)
-                        }
+                    }
+                    .padding(.vertical, 8)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        viewModel.requestSelect(lang: lang)
                     }
                 }
             }
             .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
+            .searchable(
+                text: $viewModel.searchText,
+                placement: .navigationBarDrawer(displayMode: .always)
+            )
             .background(Color(.systemGroupedBackground))
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle("Ngôn ngữ")
+        .navigationTitle("Language")
         .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog(
-            "Bạn muốn chuyển ngôn ngữ sang \(viewModel.pendingLang?.displayName ?? "")?",
+            "You want to change language to \(viewModel.pendingLang?.displayName ?? "")?",
             isPresented: $viewModel.showConfirmDialog,
             titleVisibility: .visible
         ) {
-            Button("Thay đổi", role: .destructive) {
+            Button("Change", role: .destructive) {
                 viewModel.confirmChange()
             }
-            Button("Huỷ", role: .cancel) {}
+            Button("Cancel", role: .cancel) {}
         }
     }
 }

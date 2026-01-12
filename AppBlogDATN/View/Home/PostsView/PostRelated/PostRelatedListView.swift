@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PostRelatedListView: View {
     @ObservedObject var viewModel: PostRelatedViewModel
-    @State private var selectedPost: PostDetailResponse?
+    @State private var selectedPost: PostDetailModel?
     var onSelect: ((PostDetailResponse) -> Void)? = nil
     
     

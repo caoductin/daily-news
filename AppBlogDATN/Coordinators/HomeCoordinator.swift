@@ -6,13 +6,27 @@
 //
 import SwiftUI
 
-@Observable class HomeCoordinator: Coordinator {
-    typealias ScreenType = Screen
-    
-    var path = NavigationPath()
-    
-    enum Screen: Hashable {
-        case postDetail(PostDetailResponse)
 
+@Observable
+class HomeCoordinator: Coordinator {
+    typealias ScreenType = Screen
+
+    var path = NavigationPath()
+
+    enum Screen: Hashable {
+        case postDetail(PostDetailModel)
+        case test
+    }
+}
+
+@Observable
+class SearchCoordinator: Coordinator {
+    typealias ScreenType = Screen
+
+    var path = NavigationPath()
+
+    enum Screen: Hashable {
+        case postDetail(PostDetailModel)
+        case test
     }
 }

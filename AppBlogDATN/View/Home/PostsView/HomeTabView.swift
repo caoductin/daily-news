@@ -8,38 +8,50 @@
 import SwiftUI
 
 struct HomeTabView: View {
-    @State private var currentCategory: CategoryTab = .home
+    @State private var currentCategory: Category = .home
+    @Environment(PostStore.self) private var postStore
     @State private var viewModel = PostViewModel()
-    @Environment(HomeCoordinator.self) private var homeCoordinator
     
-    var postRelated: PostDetailResponse = PostDetailResponse.mock(id: "123")
     var body: some View {
         VStack(spacing: 0) {
-            TopTab1(tabs: CategoryTab.allCases, currentTab: $currentCategory)
+            TopTabbar(tabs: Category.allCases, currentTab: $currentCategory)
             
             TabView(selection: $currentCategory) {
-                ForEach(CategoryTab.allCases) { category in
+                ForEach(Category.allCases) { category in
                     if category == .home {
-                        NavigationStack {
-                            PostHomeView()
-                        }
+                        PostHomeModule.makeView(postStore: postStore)
+                            .tag(category)
                     } else {
-                        PostListCategoryView(
-                            postListView: viewModel.filteredPosts
-                        )
-                        .tag(category)
+                        CategoryModule.makeView(category, postStore)
+                            .tag(category)
                     }
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
+            HStack {
+                Spacer()
+                Text(currentCategory.title)
+                    .font(.headline)
+                Button {
+//                    viewModel.toggleTranslate()
+                } label: {
+                    Image(systemName: viewModel.isLoading
+                          ? "globe.badge.checkmark"
+                          : "globe")
+                }
+            }
+            .padding()
         }
         .onChange(of: currentCategory) { oldTab, newTab in
             withAnimation(.easeInOut) {
                 viewModel.selectedCategory = newTab
             }
         }
-        .task {
-            await viewModel.getPost()
+        .alert("Confirm", isPresented: $viewModel.showAlert) {
+            Button("Oke", role: .cancel) {
+            }
+        } message: {
+            Text(viewModel.alertMessage)
         }
     }
 }
@@ -47,7 +59,6 @@ struct HomeTabView: View {
 #Preview {
     NavigationStack {
         let coordinator = HomeCoordinator()
-        HomeModule(coordinator: coordinator)
-            .environment(coordinator)
+        HomeModule(homeCoordinator: coordinator)
     }
 }

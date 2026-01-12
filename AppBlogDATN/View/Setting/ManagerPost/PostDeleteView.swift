@@ -20,7 +20,7 @@ struct PostDeleteView: View {
             }
             .onDelete(perform: deletePost)
         }
-        .navigationTitle("Xoá post")
+        .navigationTitle("Delete Posts")
         .task {
             await vm.fetchPosts()
         }
@@ -45,7 +45,7 @@ struct PostDeleteView: View {
 
 @MainActor
 class PostDeleteViewModel: ObservableObject {
-    @Published var posts: [PostDetailResponse] = []
+    @Published var posts: [PostDetailModel] = []
     @Published var isLoading = false
     @Published var isErrorMessage: String = ""
     private var userManager = UserManager.shared
@@ -59,13 +59,11 @@ class PostDeleteViewModel: ObservableObject {
         }
         do {
             let response = try await APIServices.shared.sendRequest(from: APIEndpoint.getPostsForUserId(userId: userId), type: PostResponse.self)
-            posts = response.posts
-            print("this is response \(response)")
+            posts = response.posts.map {$0.toDomain()}
             isLoading = false
         } catch (let error) {
             isLoading = false
             isErrorMessage = error.localizedDescription
-            print("this is error \(error)")
         }
     }
     
@@ -77,7 +75,6 @@ class PostDeleteViewModel: ObservableObject {
         }
         do {
             let _ = try await APIServices.shared.sendRequest(from: APIEndpoint.deletePost(postId: postId, userId: userId), type: EmptyResponse.self, method: .DELETE)
-            //            self.posts.removeAll { $0.id == postId }
             if let index = posts.firstIndex(where: { $0.id == postId}) {
                 posts.remove(at: index)
             }
@@ -85,7 +82,6 @@ class PostDeleteViewModel: ObservableObject {
         } catch(let error) {
             isErrorMessage = error.localizedDescription
             isLoading = false
-            print("this is error\(error.localizedDescription)")
         }
     }
 }

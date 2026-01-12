@@ -9,12 +9,12 @@ import Foundation
 
 @MainActor
 class PostRelatedViewModel: ObservableObject {
-    @Published var postsRelated: [PostDetailResponse] = []
+    @Published var postsRelated: [PostDetailModel] = []
     
     func getPostRelated(postId: String) async throws {
         let postRelated = try await APIServices.shared.sendRequest(from: APIEndpoint.getPostsRelated(postId: postId), type: [PostDetailResponse].self, method: .GET)
         print("this is postRelated \(postRelated.map{ $0.title }) - \(postId)")
-        postsRelated = postRelated
+        postsRelated = postRelated.map{ $0.toDomain()}
     }
     
 }

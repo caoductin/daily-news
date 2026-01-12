@@ -182,7 +182,7 @@ struct ImageTranslateView: View {
             }
         return VStack {
             HStack {
-                Picker("Ngôn ngữ đích", selection: $viewModel.selectedLang) {
+                Picker("Target language", selection: $viewModel.selectedLang) {
                     ForEach(SupportedLang.allCases) { lang in
                         Text("\(lang.flag) \(lang.displayName)").tag(lang)
                     }
@@ -201,7 +201,7 @@ struct ImageTranslateView: View {
                     }
             }
             if viewModel.isLoading {
-                ProgressView("Đang tải và nhận diện...")
+                ProgressView("Loading and identifying...")
             } else if let image = viewModel.image {
                 GeometryReader { geo in
                     let imageSize = image.size
@@ -251,7 +251,7 @@ struct ImageTranslateView: View {
                 viewModel.translateAllTexts()
             }
         }
-        .navigationTitle("Dịch ảnh")
+        .navigationTitle("Translate Image")
         .navigationBarTitleDisplayMode(.inline)
     }
 }

@@ -9,21 +9,27 @@ import SwiftUI
 
 struct PostSearchView: View {
     @State var postViewModel = PostSearchViewModel()
-    
+    @Environment(SearchCoordinator.self) private var searchCoordinate
+
     var body: some View {
         VStack {
-            TextField("Tìm bài viết...", text: $postViewModel.searchText)
+            Button {
+                searchCoordinate.push(.test)
+            } label: {
+                Text("Navigation Test")
+            }
+
+            TextField("Find the posts...", text: $postViewModel.searchText)
                 .padding(10)
                 .background(Color(.systemGray6))
                 .cornerRadius(8)
                 .padding(.horizontal)
             
             ScrollView {
-                
                 LazyVStack {
                     ForEach(postViewModel.posts) { post in
                         NavigationLink(value: post) {
-                            ArticleCardView(imageURL: post.image, title: post.title)
+                            ArticleCardView(post: post.toDomain())
                                 .overlay(Divider(), alignment: .bottom)
                         }
                         .task {
@@ -37,7 +43,7 @@ struct PostSearchView: View {
                 }
             }
         }
-        .navigationDestination(for: PostDetailResponse.self) { post in
+        .navigationDestination(for: PostDetailModel.self) { post in
             PostDetailView(post: post)
         }
         .task {
@@ -71,10 +77,10 @@ class PostSearchViewModel: ObservableObject {
         debounceTask?.cancel()
         debounceTask = Task {
             try? await Task.sleep(nanoseconds: 500_000_000)
-
+            
             let trimmed = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
             if trimmed != searchText { searchText = trimmed } // clean up nếu cần
-
+            
             currentPage = 1
             hasMore = true
             posts = []
@@ -90,28 +96,28 @@ class PostSearchViewModel: ObservableObject {
     
     func fetchPosts() async {
         guard hasMore else { return }
-
+        
         isLoading = true
         defer { isLoading = false }
-
+        
         do {
             let trimmedQuery = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
             let encodedQuery = trimmedQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-
+            
             let urlString = "http://localhost:3000/api/post/search?query=\(encodedQuery)&page=\(currentPage)&limit=\(limit)"
             guard let url = URL(string: urlString) else { return }
-
+            
             let (data, _) = try await URLSession.shared.data(from: url)
-
+            
             let response = try JSONDecoder().decode(PaginatedPostResponse.self, from: data)
             posts += response.posts
             hasMore = currentPage < response.totalPages
-
+            
         } catch {
             print("❌ Lỗi fetch posts:", error.localizedDescription)
         }
     }
-
+    
 }
 
 struct PaginatedPostResponse: Codable {

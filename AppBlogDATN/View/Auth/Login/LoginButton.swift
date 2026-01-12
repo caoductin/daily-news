@@ -27,21 +27,8 @@ struct LoginButton: ViewModifier {
     }
 }
 
-struct testView: View {
-    var body: some View {
-        VStack {
-            Label("Nội dung văn bản", systemImage: "star.fill")
-                .loginButton()
-        }
-    }
-}
-
 extension View {
     func loginButton() -> some View {
         modifier(LoginButton())
     }
-}
-
-#Preview {
-    testView()
 }

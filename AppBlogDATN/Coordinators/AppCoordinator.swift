@@ -9,5 +9,7 @@ import SwiftUI
 @Observable class AppCoordinator {
     var homeCoordinator = HomeCoordinator()
     var settingCoordinator = SettingCoordinator()
+    var searchCoordinator = SearchCoordinator()
+    var bookMarkCoordinator = BookmarkCoordinator()
 }
  

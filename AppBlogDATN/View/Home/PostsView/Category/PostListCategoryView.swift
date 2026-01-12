@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct PostListCategoryView: View {
-    var postListView: [PostDetailResponse] = []
+    var postListView: [PostDetailModel] = []
     
     var body: some View {
         ScrollView {
             LazyVStack {
                 ForEach(postListView) { post in
                     NavigationLink(value: post) {
-                        ArticleCardView(imageURL: post.image, title: post.title)
+                        ArticleCardView(post: post)
                             .overlay(
                                 Divider(), alignment: .bottom
                             )
@@ -23,7 +23,7 @@ struct PostListCategoryView: View {
                 }
             }
         }
-        .navigationDestination(for: PostDetailResponse.self) { post in
+        .navigationDestination(for: PostDetailModel.self) { post in
             PostDetailView(post: post)
         }
     }

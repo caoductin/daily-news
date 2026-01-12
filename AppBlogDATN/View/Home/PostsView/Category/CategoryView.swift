@@ -8,57 +8,66 @@
 import Foundation
 import SwiftUI
 
-struct Category: Identifiable, Hashable {
-    let id = UUID()
-    let name: String
+protocol LocalizableTab {
+    var title: LocalizedStringKey { get }
 }
 
 enum CategoryTab: String, CaseIterable, Identifiable {
-    case home = "Tất cả"
-    case tech = "Javascript"
-    case sports = "Thể thao"
-    case news = "Tin tức"
-    case entertainment = "Giải trí"
-
+    case home
+    case tech
+    case sports
+    case news
+    case science
+    case entertainment
+    
     var id: String { self.rawValue }
 }
 
-struct CategoryTabView: View {
-    @State private var currentCategory: CategoryTab = .home
-
-    var body: some View {
-        VStack(spacing: 0) {
-            TopTab1(tabs: CategoryTab.allCases, currentTab: $currentCategory)
-
-            TabView(selection: $currentCategory) {
-                ForEach(CategoryTab.allCases) { category in
-                    PostHomeView()
-                        .tag(category)
-                }
-            }
-            .tabViewStyle(.page(indexDisplayMode: .never))
+extension CategoryTab: LocalizableTab {
+    
+    var title: LocalizedStringKey {
+        switch self {
+        case .home: return "Home"
+        case .entertainment: return "Entertainment"
+        case .tech: return "Tech"
+        case .news: return "News"
+        case .science: return "Science"
+        case .sports: return "Sports"
         }
-        .animation(.easeInOut, value: currentCategory)
+    }
+    
+    var color: Color {
+        switch self {
+        case .home: return .blue
+        case .tech : return .yellow
+        case .sports: return .red
+        case .news: return .green
+        case .science: return .purple
+        case .entertainment: return .orange
+        }
+    }
+    
+    var textColor: Color {
+        color
+    }
+    
+    var backgroundColor: Color {
+        color.opacity(0.15)
     }
 }
 
-#Preview {
-    CategoryTabView()
-}
-
-
-struct TopTab1<T: RawRepresentable & Identifiable & CaseIterable & Equatable>: View where T.RawValue == String {
+struct TopTabbar<T: RawRepresentable & Identifiable & CaseIterable & Equatable & LocalizableTab>: View where T.RawValue == String {
     @Namespace private var animation
     var tabs: [T]
     @Binding var currentTab: T
-
+    
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 20) {
                     ForEach(tabs) { tab in
-                        TabItem(label: tab.rawValue, isSelected: currentTab == tab)
-                            .id(tab.id) // 👈 assign ID for scrolling
+                        TabItem(label: tab.title, isSelected: currentTab == tab)
+                            .id(tab.id)
                             .onTapGesture {
                                 withAnimation {
                                     currentTab = tab
@@ -68,16 +77,16 @@ struct TopTab1<T: RawRepresentable & Identifiable & CaseIterable & Equatable>: V
                 }
                 .padding(.horizontal)
             }
-            .onChange(of: currentTab) { tab in
+            .onChange(of: currentTab) {oldtab, tab in
                 withAnimation {
                     proxy.scrollTo(tab.id, anchor: .center)
                 }
             }
         }
     }
-
+    
     @ViewBuilder
-    func TabItem(label: String, isSelected: Bool) -> some View {
+    func TabItem(label: LocalizedStringKey, isSelected: Bool) -> some View {
         VStack(spacing: 4) {
             Text(label)
                 .font(.system(size: 16, weight: .semibold))

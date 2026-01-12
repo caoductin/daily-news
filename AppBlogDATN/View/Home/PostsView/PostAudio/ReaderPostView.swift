@@ -28,10 +28,10 @@ struct SpeechTestView: View {
         VStack {
             HStack(spacing: 0) {
                 HStack(spacing: 0) {
-                    Picker("Giọng", selection: $viewModel.voicePreference) {
-                        Text("Hệ thống").tag(VoicePreference.systemDefault)
-                        Text("Nam").tag(VoicePreference.preferMale)
-                        Text("Nữ").tag(VoicePreference.preferFemale)
+                    Picker("Voice", selection: $viewModel.voicePreference) {
+                        Text("System").tag(VoicePreference.systemDefault)
+                        Text("Male").tag(VoicePreference.preferMale)
+                        Text("Female").tag(VoicePreference.preferFemale)
                     }
                     .pickerStyle(.menu)
                 }
@@ -55,7 +55,7 @@ struct SpeechTestView: View {
                 .disabled(viewModel.inputText.isEmpty)
                 .frame(maxWidth: .infinity, alignment: .center)
                 HStack(spacing: 3) {
-                    Picker("Tốc độ", selection: $viewModel.rate) {
+                    Picker("Speed", selection: $viewModel.rate) {
                         ForEach(speakingRates, id: \.self) { rate in
                             Text(String(format: "%.1fx", rate)).tag(rate)
                         }

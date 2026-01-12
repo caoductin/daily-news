@@ -19,5 +19,10 @@ import SwiftUI
         case information
         case createPost
         case deletePost
+        case theme
+    }
+    
+    func demo() {
+        print("Navigatyion path", path.count, path)
     }
 }

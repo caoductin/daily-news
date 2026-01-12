@@ -23,7 +23,7 @@ struct SummaryDialogView: View {
                 }
 
             VStack {
-                Text("Tóm tắt nội dung")
+                Text("Summary of content")
                     .font(.headline)
                     .padding(.top)
 
@@ -45,7 +45,7 @@ struct SummaryDialogView: View {
                     summaryTextHeight = height
                 }
 
-                Button("Đóng") {
+                Button("Close") {
                     withAnimation {
                         isPresented = false
                     }
@@ -82,7 +82,7 @@ struct SummaryButtonView: View {
                                 .progressViewStyle(CircularProgressViewStyle(tint: .white))
                         )
                 } else {
-                    Text("Tóm tắt văn bản")
+                    Text("Text summary")
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)

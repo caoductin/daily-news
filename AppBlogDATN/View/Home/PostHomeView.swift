@@ -8,34 +8,38 @@ import Foundation
 import SwiftUI
 
 struct PostHomeView: View {
-    @State var postViewModel = PostViewModel()
+    @Bindable var viewModel: HomePostViewModel
+    @Environment(PostStore.self) private var postStore
+    @Environment(HomeCoordinator.self) private var homeCoordinates
 
     var body: some View {
         ScrollView {
             LazyVStack {
-                ForEach(postViewModel.postsPaginated?.posts ?? []) { post in
-                    NavigationLink(value: post) {
-                        ArticleCardView(imageURL: post.image, title: post.title)
-                            .overlay(
-                                Divider(), alignment: .bottom
+                ForEach(viewModel.postIds, id: \.self) { id in
+                    if let post = postStore.post(id: id) {
+                        Button {
+                            homeCoordinates.push(.postDetail(post))
+                        } label: {
+                            ArticleCardView(
+                                post: post,
+                                onToggleBookmark: {
+                                    Task {
+                                        await viewModel.toggleBookmark(postId: id)
+                                    }
+                                }
                             )
+                            .onAppear {
+                                Task { await viewModel.getPosts() }
+                            }
+                        }
                     }
-                    .onAppear {
-                        postViewModel.loadMoreContentIfNeeded(currentPost: post)
-                    }
-                }
-                
-                if postViewModel.isLoading {
-                    ProgressView()
-                        .padding()
                 }
             }
         }
-        .navigationDestination(for: PostDetailResponse.self) { post in
-            PostDetailView(post: post)
-        }
-        .onAppear {
-            postViewModel.initialLoadIfNeeded()
+        .task {
+            if viewModel.postIds.isEmpty {
+                await viewModel.getPosts()
+            }
         }
     }
 }

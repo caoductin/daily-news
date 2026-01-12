@@ -18,15 +18,24 @@ class PostViewModel {
     var isLoading = false
     var currentPage = 1
     var totalPages = 1
+    var showAlert = false
+    var alertMessage = ""
+        
+//    private let fetchAllPosts: FetchPostsUseCase
+//
+//    init(fetchAllPosts: FetchPostsUseCase) {
+//        self.fetchAllPosts = fetchAllPosts
+//    }
+//    
     var searchText: String = "" {
         didSet {
-            print("debound search")
             debounceSearch()
         }
     }
+    
     private var debounceTask: Task<Void, Never>?
     
-    var selectedCategory: CategoryTab = .home {
+    var selectedCategory: Category = .home {
         didSet {
             filterPosts()
         }
@@ -58,6 +67,9 @@ class PostViewModel {
     }
     
     func getPaginatedPosts(reset: Bool = false) async throws {
+        defer {
+            isLoading = false
+        }
         guard !isLoading, currentPage <= totalPages else {
             return
         }
@@ -88,11 +100,14 @@ class PostViewModel {
             postsPaginated = updated
         }
         currentPage += 1
-        isLoading = false
     }
     
     func getPost() async {
         isLoading = true
+        defer {
+            isLoading = false
+        }
+        
         do {
             let response = try await APIServices.shared.sendRequest(from: APIEndpoint.getPosts, type: PostResponse.self, method: .GET)
             self.allPosts = response.posts
@@ -100,21 +115,26 @@ class PostViewModel {
             self.allPosts = response.posts
         } catch(let error) {
             print("lỗi tải bài\(error.localizedDescription)")
+            alertMessage = error.localizedDescription
+            showAlert = true
         }
-        isLoading = false
     }
     
     func filterPosts() {
-        if selectedCategory == .home {
-            filteredPosts = allPosts
-        } else {
-            filteredPosts = allPosts.filter {
-                $0.category.lowercased() == selectedCategory.rawValue.lowercased()
-            }
-        }
+//        if selectedCategory == .home {
+//            filteredPosts = allPosts
+//        } else {
+//            filteredPosts = allPosts.filter {
+//                $0.category.lowercased() == selectedCategory.rawValue.lowercased()
+//            }
+//        }
+    }
+
+    func fetchPostByCategory(category: Category, page: Int, limit: Int) {
+        
     }
     
-    func didSelectTab(_ tab: CategoryTab) {
+    func didSelectTab(_ tab: Category) {
         selectedCategory = tab
     }
     
@@ -139,7 +159,7 @@ class PostViewModel {
             }
         }
     }
-
+    
     func searchPosts(query: String) {
         if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             filteredPosts = allPosts
@@ -149,4 +169,81 @@ class PostViewModel {
             }
         }
     }
+}
+
+
+@Observable
+@MainActor
+final class HomePostViewModel {
+    // MARK: - State
+    var postIds: [String] = []
+    var isLoading = false
+    var hasNext = true
+    var isError = false
+    var errorMessage: String?
+
+    // MARK: - Pagination
+    private var page = 1
+    private let limit = 3
+
+    // MARK: - Dependencies
+    private let postStore: PostStore
+    private let fetchPosts: FetchPostByCategoryUseCase
+    private let markPostBookmarkUsecase: MarkPostAsBookmarkUsecase
+
+    init(
+        postStore: PostStore,
+        fetchPosts: FetchPostByCategoryUseCase,
+        markPostBookmarkUsecase: MarkPostAsBookmarkUsecase
+    ) {
+        self.postStore = postStore
+        self.fetchPosts = fetchPosts
+        self.markPostBookmarkUsecase = markPostBookmarkUsecase
+    }
+
+    func getPosts(isRefresh: Bool = false) async {
+        guard !isLoading, hasNext else { return }
+        if isRefresh {
+            page = 1
+            hasNext = true
+            postIds.removeAll()
+        }
+
+        isLoading = true
+        isError = false
+
+        do {
+            let result = try await fetchPosts.execute(
+                category: nil,
+                page: page,
+                limit: limit
+            )
+            postStore.upsert(result.posts)
+            postIds.append(contentsOf: result.posts.map(\.id))
+            hasNext = result.hasNext
+            page += 1
+        } catch {
+            isError = true
+            errorMessage = error.localizedDescription
+        }
+
+        isLoading = false
+    }
+    
+    func toggleBookmark(postId: String) async -> Bool{
+        postStore.update(postId: postId) {
+            $0.isBookmarked.toggle()
+        }
+
+        do {
+            let data = try await markPostBookmarkUsecase.execute(id: postId)
+            return data
+        } catch {
+            postStore.update(postId: postId) {
+                $0.isBookmarked.toggle()
+            }
+            return false
+        }
+    }
+    
 }

@@ -13,7 +13,7 @@ struct CommentInputView: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            TextField("Viết bình luận...", text: $commentText, axis: .vertical)
+            TextField("Write a comment...", text: $commentText, axis: .vertical)
                 .textFieldStyle(.plain)
                 .padding(10)
                 .background(Color(.secondarySystemBackground))

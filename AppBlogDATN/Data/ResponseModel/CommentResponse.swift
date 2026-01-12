@@ -17,7 +17,7 @@ struct CommentResponse: Decodable, Equatable {
     let createdAt: String
     let updatedAt: String
     let userInfo: UserResponseComment?
-    var isLikedByCurrentUser: Bool = false 
+    var isLikedByCurrentUser: Bool = false
     
     enum CodingKeys: String, CodingKey {
         case id = "_id"
@@ -75,25 +75,3 @@ extension CommentResponse {
     }
 
 }
-
-//
-//[
-//    {
-//        "_id": "6834ad6d529b3e5b6fe6b76e",
-//        "content": "bài viết hay quá",
-//        "postId": "6824be39121596abb8df7348",
-//        "userId": "6824ba7f121596abb8df7305",
-//        "likes": [
-//            "6824ba7f121596abb8df7305"
-//        ],
-//        "numberOfLikes": 1,
-//        "createdAt": "2025-05-26T18:05:33.267Z",
-//        "updatedAt": "2025-05-26T18:05:36.055Z",
-//        "__v": 1,
-//        "user": {
-//            "_id": "6824ba7f121596abb8df7305",
-//            "username": "tuan",
-//            "profilePicture": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-//        }
-//    }
-//]

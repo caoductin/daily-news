@@ -16,40 +16,72 @@ enum HTTPMethod: String {
 }
 
 enum APIEndpoint {
+    case getUser(id: String)
+    
     case getPosts
     case getPostsForUserId(userId: String)
     case deletePost(postId: String, userId: String)
-    case getUser(id: String)
     case createPost
+    case getPostsRelated(postId: String)
+    case getPaginatedPosts(currentPage: Int, limit: Int)
+    case getPostByCategory(category: Category?, currentPage: Int, limit: Int)
+    
+    case bookmark
+    case getBookmarks(startndex: Int, limit: Int)
+
     case getComments(postId: String)
     case createComment
-    case getPaginatedPosts(currentPage: Int, limit: Int)
+    
     case translateText
-    case getPostsRelated(postId: String)
     case login
     
     var path: String {
         switch self {
-        case .getPosts:
-            return "/api/post/getposts"
+        //MARK: USER
         case .getUser(let id):
             return "/api/users/\(id)"
+
+        //MARK: COMMENTS
+        case .getComments(let postId):
+            return "/api/comment/getPostComments/\(postId)"
+        case .createComment:
+            return "/api/comment/create"
+        
+        //MARK: Bookmarks
+        case .bookmark:
+            return "/api/post/bookmark"
+        case .getBookmarks(let startIndex, let limit):
+            return "/api/post/bookmarks?startIndex=\(startIndex)&limit=\(limit)"
+            
+        //MARK: POSTS
+        case .getPosts:
+            return "/api/post/getposts"
+        case .getPaginatedPosts(let currentPage, let limit):
+            return "/api/post/getPaginatedPosts?page=\(currentPage)&limit=\(limit)"
         case .getPostsForUserId(let userId):
             return "/api/post/getposts?userId=\(userId)"
         case .deletePost(let postId,let userId):
             return "/api/post/deletepost/\(postId)/\(userId)"
         case .createPost:
             return "/api/post/create"
-        case .getComments(let postId):
-            return "/api/comment/getPostComments/\(postId)"
-        case .createComment:
-            return "/api/comment/create"
-        case .getPaginatedPosts(let currentPage, let limit):
-            return "/api/post/getPaginatedPosts?page=\(currentPage)&limit=\(limit)"
-        case .translateText:
-            return "/api/translate"
         case .getPostsRelated(let postId):
             return "/api/post/relatedPosts/\(postId)"
+        case .getPostByCategory(let category, let page, let limit):
+            var queryItems: [String] = [
+                "startIndex=\(page)",
+                "limit=\(limit)"
+            ]
+
+            if let category {
+                queryItems.append("category=\(category.rawValue)")
+            }
+
+            let query = queryItems.joined(separator: "&")
+            return "/api/post?\(query)"
+        //MARK: UTILS
+            
+        case .translateText:
+            return "api/translation/text"
         case .login:
             return "api/auth/signin"
         }
@@ -103,7 +135,6 @@ class APIServices {
         
         if let token = TokenManager.shared.accessToken {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            print("xxx \(token)")
         }
         
         headers.forEach { key, value in

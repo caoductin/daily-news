@@ -14,17 +14,17 @@ import NaturalLanguage
 @Observable
 @MainActor
 class PostDetailViewModel {
-    var displayingPost: PostDetailResponse
+    var displayingPost: PostDetailModel
     var isLoading: Bool = false
     var errorMessage: String?
     var sumaryText: String?
     var isSummaryText: Bool = false
-    private var translationCaches: [SupportedLang: PostDetailResponse] = [:]
+    private var translationCaches: [SupportedLang: PostDetailModel] = [:]
     private var sumaryTextCaches: [SupportedLang: String] = [:]
     private var originLang: SupportedLang = .vietnamese
     private var task: Task<Void, Never>? = nil
     
-    init(post: PostDetailResponse) {
+    init(post: PostDetailModel) {
         self.displayingPost = post
         Task {
             let detectLang = await Self.detectLanguage(of: post.content.htmlToPlainString())
@@ -106,7 +106,7 @@ class PostDetailViewModel {
         }
     }
     
-    private func checkCachesLanguage(_ lang: SupportedLang) -> PostDetailResponse? {
+    private func checkCachesLanguage(_ lang: SupportedLang) -> PostDetailModel? {
         if let cachesTranslate = translationCaches[lang] {
             return cachesTranslate
         }

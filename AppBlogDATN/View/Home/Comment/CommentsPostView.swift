@@ -19,19 +19,19 @@ struct CommentsPostView: View {
                 
                 VStack(spacing: 16) {
                     if commentVM.isLoading {
-                        ProgressView("Đang tải comment...")
+                        ProgressView("Loading comments...")
                             .frame(maxWidth: .infinity)
                             .padding()
                     } else if commentVM.comments.isEmpty {
-                        Text("Chưa có bình luận nào.")
+                        Text("No comments yet.")
                             .frame(maxWidth: .infinity)
                             .foregroundColor(.gray)
                             .italic()
                     } else {
                         HStack {
-                            Text("Bình luận")
+                            Text("Comment")
                             Spacer()
-                            Text("Xem tất cả")
+                            Text("See All")
                         }
                         .font(.headline)
                         .padding(.bottom, 4)

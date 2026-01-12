@@ -14,16 +14,15 @@ class LanguageSettingViewModel: ObservableObject {
     @Published var selectedLang: SupportedLang
     @Published var showConfirmDialog = false
     @Published var pendingLang: SupportedLang?
-
+    
     @AppStorage("appLanguage") private var appLanguage: String = SupportedLang.vietnamese.rawValue
-
+    
     init() {
         let storedLang = UserDefaults.standard.string(forKey: "appLanguage") ?? SupportedLang.vietnamese.rawValue
         let current = SupportedLang(rawValue: storedLang) ?? .vietnamese
         _selectedLang = Published(initialValue: current)
-//        LocalizationManager.shared.setLanguage(current.rawValue)
     }
-
+    
     var filteredLanguages: [SupportedLang] {
         if searchText.isEmpty {
             return SupportedLang.allCases
@@ -33,19 +32,18 @@ class LanguageSettingViewModel: ObservableObject {
             }
         }
     }
-
+    
     func requestSelect(lang: SupportedLang) {
-        if lang != selectedLang {
-            pendingLang = lang
-            showConfirmDialog = true
-        }
+        guard lang != selectedLang else { return }
+        pendingLang = lang
+        showConfirmDialog = true
     }
-
+    
     func confirmChange() {
         guard let newLang = pendingLang else { return }
         selectedLang = newLang
         appLanguage = newLang.rawValue
         LocalizationManager.shared.setLanguage(newLang.rawValue)
-        NotificationCenter.default.post(name: .languageChanged, object: nil)
+        pendingLang = nil
     }
 }

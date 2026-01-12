@@ -35,3 +35,20 @@ extension String {
         }
     }
 }
+
+extension String {
+    func toDate() -> Date? {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter.date(from: self)
+    }
+}
+
+extension Date {
+    func timeAgoDisplay(locale: Locale = .current) -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        formatter.locale = locale
+        return formatter.localizedString(for: self, relativeTo: Date())
+    }
+}

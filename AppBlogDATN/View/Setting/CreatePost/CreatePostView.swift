@@ -15,13 +15,11 @@ struct PostRequest: Encodable {
 class PostCreateViewModel {
     var title = ""
     var content = ""
-    var category = "Thể thao"
+    var category = "sports"
     var selectedImage: UIImage?
     var uploadedImageURL: URL?
     var isUploading = false
-    
-    let categoryOptions = ["Thể thao", "Công nghệ", "Giải trí", "SwiftUI"]
-    
+        
     func uploadImage(completion: @escaping (Bool) -> Void) {
         guard let imageData = selectedImage?.jpegData(compressionQuality: 0.8) else {
             completion(false)
@@ -67,7 +65,7 @@ class PostCreateViewModel {
             category: category
         )
         do {
-            let response = try await APIServices.shared.sendRequest(from: APIEndpoint.createPost.path, type: EmptyResponse.self, method: .POST, body: post)
+            let _ = try await APIServices.shared.sendRequest(from: APIEndpoint.createPost.path, type: EmptyResponse.self, method: .POST, body: post)
             clearData()
         } catch(let error) {
             print("this is error \(error)")
@@ -94,16 +92,16 @@ struct PostCreateView: View {
             VStack(alignment: .leading, spacing: 20) {
                 
                 Group {
-                    Text("Tiêu đề")
+                    Text("Title")
                         .font(.headline)
-                    TextField("Nhập tiêu đề bài viết", text: $vm.title)
+                    TextField("Enter the article title", text: $vm.title)
                         .padding()
                         .background(Color(.secondarySystemBackground))
                         .cornerRadius(10)
                 }
                 
                 Group {
-                    Text("Nội dung")
+                    Text("Content")
                         .font(.headline)
                     TextEditor(text: $vm.content)
                         .frame(height: 180)
@@ -113,14 +111,14 @@ struct PostCreateView: View {
                 }
 
                 Group {
-                    Text("Danh mục")
+                    Text("Category")
                         .font(.headline)
                     Menu {
-                        ForEach(vm.categoryOptions, id: \.self) { category in
+                        ForEach(Category.allCases, id: \.self) { category in
                             Button {
-                                vm.category = category
+                                vm.category = category.rawValue
                             } label: {
-                                Text(category)
+                                Text(category.title)
                             }
                         }
                     } label: {
@@ -136,7 +134,7 @@ struct PostCreateView: View {
                 }
 
                 Group {
-                    Text("Ảnh minh họa")
+                    Text("Illustrative image")
                         .font(.headline)
 
                     if let image = vm.selectedImage {
@@ -148,7 +146,7 @@ struct PostCreateView: View {
                             .clipped()
                     }
 
-                    PhotosPicker("📸 Chọn ảnh từ thư viện", selection: $pickerItem, matching: .images)
+                    PhotosPicker("📸 Select an image from the library.", selection: $pickerItem, matching: .images)
                         .buttonStyle(.borderedProminent)
                         .padding(.top, 5)
                         .onChange(of: pickerItem) { item in
@@ -162,7 +160,7 @@ struct PostCreateView: View {
                 }
 
                 if vm.isUploading {
-                    ProgressView("Đang tải ảnh lên...")
+                    ProgressView("Uploading images...")
                         .padding(.vertical)
                 }
 
@@ -175,7 +173,7 @@ struct PostCreateView: View {
                         }
                     }
                 }) {
-                    Text("Tạo bài viết")
+                    Text("Create a post")
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(vm.title.isEmpty || vm.content.isEmpty || vm.selectedImage == nil ? Color.gray : Color.blue)
@@ -186,7 +184,7 @@ struct PostCreateView: View {
             }
             .padding()
         }
-        .navigationTitle("Tạo bài viết mới")
+        .navigationTitle("Create a new post")
     }
 }
 

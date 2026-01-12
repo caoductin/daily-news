@@ -11,12 +11,13 @@ struct ProfileView: View {
     @StateObject var userVM = UserManager.shared
     @State var email: String = ""
     let defaultImage = ""
+    
     var body: some View {
         VStack(spacing: 30) {
             RemoteImageView(imageURl: userVM.currentUser?.profilePicture ?? "", cornerRadius: .infinity)
                 .clipShape(Circle())
             VStack(spacing: 8) {
-                Text(userVM.currentUser?.username ?? "Không xác định")
+                Text(userVM.currentUser?.username ?? "Undefined")
                 Text("Email")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -27,19 +28,19 @@ struct ProfileView: View {
                     .autocapitalization(.none)
                     .previewLayout(.sizeThatFits)
                 
-                Text("Mật khẩu")
+                Text("Password")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
                 SecureTextField(password: $email)
                 
-                Text("Nhập lại mật khẩu")
+                Text("Confirm Passwrod")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
                 SecureTextField(password: $email)
             }
           
             
-            Button("Cập nhật") {
+            Button("Update") {
                 
             }
             .buttonStyle(BorderButton(backgroundColor: .blue, cornerRadius: 20))

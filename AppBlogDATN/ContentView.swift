@@ -11,12 +11,13 @@ struct ContentView: View {
     @AppStorage("appLanguage") var appLanguage: String = "vi"
     @StateObject var loginManager = UserManager.shared
     @State private var reloadID = UUID()
-
+    @State private var appCoordinator = AppCoordinator()
     var body: some View {
         NavigationStack {
             Group {
                 if loginManager.isLogin {
                     HomeTabbarView()
+                        .environment(appCoordinator)
                 } else {
                     AuthPageView()
                 }

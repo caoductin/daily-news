@@ -17,25 +17,25 @@ struct AppInformationView: View {
 
     var body: some View {
         Form {
-            Section(header: Text("Thông tin ứng dụng")) {
+            Section(header: Text("Application Information")) {
                 HStack {
-                    Text("Tên ứng dụng")
+                    Text("Application Name")
                     Spacer()
                     Text(appName)
                         .foregroundColor(.secondary)
                 }
 
                 HStack {
-                    Text("Phiên bản")
+                    Text("Version")
                     Spacer()
                     Text(version)
                         .foregroundColor(.secondary)
                 }
             }
 
-            Section(header: Text("Nhà phát triển")) {
+            Section(header: Text("Developer")) {
                 HStack {
-                    Text("Người phát triển")
+                    Text("Developer")
                     Spacer()
                     Text(developer)
                         .foregroundColor(.secondary)
@@ -48,7 +48,7 @@ struct AppInformationView: View {
                 Button {
                     sendEmail()
                 } label: {
-                    Label("Gửi email", systemImage: "envelope")
+                    Label("Send email", systemImage: "envelope")
                 }
             }
 
@@ -56,11 +56,11 @@ struct AppInformationView: View {
                 Button {
                     shareApp()
                 } label: {
-                    Label("📤 Chia sẻ ứng dụng", systemImage: "square.and.arrow.up")
+                    Label("📤 Share app", systemImage: "square.and.arrow.up")
                 }
             }
         }
-        .navigationTitle("ℹ️ Giới thiệu")
+        .navigationTitle("ℹ️ Introduction")
     }
 
     func sendEmail() {

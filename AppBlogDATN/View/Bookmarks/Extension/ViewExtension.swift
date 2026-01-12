@@ -12,13 +12,13 @@ extension View {
         item: Binding<CommentResponse?>,
         onDelete: @escaping (CommentResponse) -> Void
     ) -> some View {
-        alert("Bạn có chắc muốn xoá bình luận?", isPresented: isPresented, presenting: item.wrappedValue) { comment in
-            Button("Xoá", role: .destructive) {
+        alert("Are you sure you want to delete the comment?", isPresented: isPresented, presenting: item.wrappedValue) { comment in
+            Button("Delete", role: .destructive) {
                 onDelete(comment)
             }
-            Button("Huỷ", role: .cancel) {}
+            Button("Cancel", role: .cancel) {}
         } message: { comment in
-            Text("\"\(comment.content.prefix(40))...\" sẽ bị xoá vĩnh viễn.")
+            Text("\"\(comment.content.prefix(40))...\" It will be permanently deleted.")
         }
     }
 }

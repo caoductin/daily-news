@@ -23,7 +23,7 @@ struct PostDetailView: View {
     @State private var commentText = ""
     @State private var previousLang: SupportedLang = .vietnamese
     @State private var viewModel: PostDetailViewModel
-    init(post: PostDetailResponse) {
+    init(post: PostDetailModel) {
         _viewModel = State(wrappedValue: PostDetailViewModel(post: post))
     }
     
@@ -81,43 +81,34 @@ struct PostDetailView: View {
             viewModel.isLoading = false
             
         }
-        //        .navigationDestination(for: NavigationRoute.self, destination: { route in
-        //            switch route {
-        //            case .imageDetail(let url):
-        //                ImageTranslateView(imageURL: url)
-        //            default:
-        //                Text("không có view nào")
-        //            }
-        //        })
-        .navigationTitle("test")
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-#Preview {
-    let mockPost = PostDetailResponse(
-        id: "6824be39121596abb8df7348",
-        userId: "user001",
-        content: "Liên Hợp Quốc quan ngại về chiến dịch không kích của Mỹ vào Iran.Tôi rất quan ngại về việc Mỹ sử dụng vũ lực chống lại Iran hôm nay.",
-        category: "Tech",
-        title: "The anniversary ",
-        slug: "understanding-swift-concurrency",
-        image: "https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/09/how-to-write-a-blog-post.png",
-        createdAt: "2025-05-20T10:00:00Z",
-        updatedAt: "2025-05-21T09:00:00Z"
-    )
-    
-    let mockPostResponse = PostResponse(
-        posts: [mockPost, mockPost],
-        totalPosts: 2,
-        lastMonthPosts: 1
-    )
-    let postViewModelMock = PostViewModel()
-    NavigationStack {
-        PostDetailView(post: mockPost)
-    }
-}
+//#Preview {
+//    let mockPost = PostDetailModel(
+//        id: "6824be39121596abb8df7348",
+//        userId: "user001",
+//        content: "Liên Hợp Quốc quan ngại về chiến dịch không kích của Mỹ vào Iran.Tôi rất quan ngại về việc Mỹ sử dụng vũ lực chống lại Iran hôm nay.",
+//        category: .home,
+//        title: "The anniversary ",
+//        slug: "understanding-swift-concurrency",
+//        image: URL(string:"https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/09/how-to-write-a-blog-post.png"),
+//        createdAt: .now,
+//        updatedAt: .now
+//    )
+//    
+//    let mockPostResponse = PostResponse(
+//        posts: [mockPost, mockPost],
+//        totalPosts: 2,
+//        lastMonthPosts: 1
+//    )
+//    let postViewModelMock = PostViewModel()
+//    NavigationStack {
+//        PostDetailView(post: mockPost)
+//    }
+//}
 
 extension PostDetailView {
     private func createComment() {
@@ -145,8 +136,7 @@ struct BodyPostView: View {
             Text(viewModel.displayingPost.title)
                 .font(.headline)
                 .multilineTextAlignment(.leading)
-            if let url = URL(string: viewModel.displayingPost.image) {
-                WebImage(url: url) { image in
+                WebImage(url: viewModel.displayingPost.image) { image in
                     image.resizable()
                 } placeholder: {
                     Rectangle().foregroundColor(.gray)
@@ -156,15 +146,14 @@ struct BodyPostView: View {
                 .aspectRatio(contentMode: .fit)
                 .cornerRadius(8)
                 .onTapGesture {
-                    selectedImageURL = url
+                    selectedImageURL = viewModel.displayingPost.image
                     print()
                 }
-            }
             Text(viewModel.displayingPost.content.htmlToPlainString())
             
         }
         .navigationDestination(item: $selectedImageURL) { post in
-            ImageTranslateView(imageURL: URL(string: viewModel.displayingPost.image)!)
+            ImageTranslateView(imageURL: viewModel.displayingPost.image!)
         }
     }
 }

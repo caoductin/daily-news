@@ -59,10 +59,7 @@ class CommentViewModel: ObservableObject {
         do {
             let created = try await APIServices.shared.sendRequest(from: "/api/comment/create", type: CommentResponse.self, body: newComment)
             let mapped = mapComments([created]).first!
-            print("this is created \(created)")
-            print("this is mapped\(mapped)")
             self.comments.insert(mapped, at: 0)
-            print("xxx\(self.comments)")
         } catch (let error) {
             errorMessage = error.localizedDescription
             print("this is error\(errorMessage)")
@@ -77,7 +74,7 @@ class CommentViewModel: ObservableObject {
         }
        
         do {
-            let data =  try await APIServices.shared.sendRequestString(from: "/api/comment/likeComment/\(commentId)", type: EmptyResponse.self, method: .PUT ,body: nil)
+            let _ =  try await APIServices.shared.sendRequestString(from: "/api/comment/likeComment/\(commentId)", type: EmptyResponse.self, method: .PUT ,body: nil)
         }
         catch(let error) {
             errorMessage = error.localizedDescription
@@ -93,7 +90,7 @@ class CommentViewModel: ObservableObject {
         }
             
         do {
-            let deleted = try await APIServices.shared.sendRequestString(from: "/api/comment/deleteComment/\(commentId)", type: EmptyResponse.self, method: .DELETE, body: nil)
+            let _ = try await APIServices.shared.sendRequestString(from: "/api/comment/deleteComment/\(commentId)", type: EmptyResponse.self, method: .DELETE, body: nil)
             if let index = comments.firstIndex(where: {$0.id == commentId}) {
                 comments.remove(at: index)
             }

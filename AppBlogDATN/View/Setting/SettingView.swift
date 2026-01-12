@@ -7,57 +7,78 @@
 
 import SwiftUI
 import Translation
+
 struct SettingView: View {
     @Environment(SettingCoordinator.self) private var settingCoordinator
     let isLogin = UserManager.shared.isLogin
+    
     var body: some View {
         VStack {
             List {
-                ForEach([SettingCategory.general, .posts, .account], id: \.self) { category in
-                    let options = SettingOptions.allCases.filter { $0.category == category }
-                    Section(header: Text(category.title)
-                        .font(.headline)
-                        .foregroundColor(.gray)
+                ForEach(
+                    [SettingCategory.general, .posts, .account], id: \.self
+                ) { category in
+                    let options = SettingOptions.allCases.filter {
+                        $0.category == category
+                    }
+                    Section(
+                        header: Text(category.title)
+                            .font(.headline)
+                            .foregroundColor(.gray)
                     ) {
                         ForEach(options) { option in
                             LabelItem(option: option)
                         }
                     }
                 }
+                LogoutSection()
             }
-            .listStyle(.insetGrouped)
+            .listStyle(.grouped)
             .background(.red)
-            FooterView()
         }
-    }
-    
-    @ViewBuilder
-    func FooterView() -> some View {
-        Button {
-            if isLogin {
-                UserManager.shared.logout()
-            } else {
-                //navigation to post
-            }
-            
-        } label: {
-            Text(isLogin ? "Logout" : "Sign up")
-                .font(.headline)
-        }
-        .padding(.horizontal, 16)
-        .buttonStyle(BorderButton(backgroundColor: .blue))
+        .navigationTitle("Setting")
     }
     
     @ViewBuilder
     func LabelItem(option: SettingOptions) -> some View {
         Button {
-            settingCoordinator.push(.language)
+            settingCoordinator.push(option.screen)
         } label: {
-            Label(option.title, systemImage: option.icons)
-                .fontDesign(.rounded)
-                .padding(.vertical, 6)
+            HStack {
+                Label {
+                    Text(option.title)
+                        .foregroundColor(.black)
+                        .fontDesign(.rounded)
+                } icon: {
+                    Image(systemName: option.icons)
+                }
+                .padding(.vertical, 4)
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.gray)
+            }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.borderless)
+    }
+    
+    @ViewBuilder
+    func LogoutSection() -> some View {
+        Section(header: Text("Logout")
+            .font(.headline)
+            .foregroundColor(.gray))
+        {
+            Button(
+                role: .destructive,
+                action: {
+                    UserManager.shared.logout()
+                },
+                label: {
+                    Label("Logout",systemImage: "rectangle.portrait.and.arrow.forward.fill")
+                }
+            )
+        }
     }
 }
 
@@ -91,33 +112,53 @@ enum SettingOptions: String, CaseIterable, Identifiable {
     case language
     case information
     case createPost
-    case userInfo
-    case managerPost
+    case profile
+    case deletePost
+    case theme
     
-    var id: String { title }
+    var id: String { self.rawValue }
     
-    var title: String {
+    var screen: SettingCoordinator.Screen {
         switch self {
         case .language:
-            "Language"
+                .language
         case .information:
-            "Information"
+                .information
         case .createPost:
-            "Create Post"
-        case .managerPost:
-            "Manage Post"
-        case .userInfo:
-            "User Info"
+                .createPost
+        case .profile:
+                .profile
+        case .deletePost:
+                .deletePost
+        case .theme:
+                .theme
+        }
+    }
+    
+    var title: LocalizedStringKey {
+        switch self {
+        case .language:
+            return "Language"
+        case .information:
+            return "Information"
+        case .createPost:
+            return "Create Post"
+        case .deletePost:
+            return "Manage Post"
+        case .profile:
+            return "User Info"
+        case .theme:
+            return "Theme"
         }
     }
     
     var category: SettingCategory {
         switch self {
-        case .userInfo:
+        case .profile:
             return .account
-        case .language, .information:
+        case .language, .information, .theme:
             return .general
-        case .createPost, .managerPost:
+        case .createPost, .deletePost:
             return .posts
         }
     }
@@ -130,27 +171,12 @@ enum SettingOptions: String, CaseIterable, Identifiable {
             "info.circle"
         case .createPost:
             "square.and.arrow.down.fill"
-        case .managerPost:
-            "trash"
-        case .userInfo:
+        case .deletePost:
+            "trash.fill"
+        case .profile:
             "person.fill"
-        }
-    }
-    
-    @ViewBuilder
-    var destination: some View {
-        switch self {
-        case .userInfo:
-            ProfileView()
-        case .language:
-            LanguageSettingView()
-        case .information:
-            AppInformationView()
-        case .createPost:
-            PostCreateView()
-        case .managerPost:
-            PostDeleteView()
+        case .theme:
+            "circle.lefthalf.filled"
         }
     }
 }
-

@@ -11,6 +11,8 @@
 		77208CA02DB695A700F9A61E /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 77208C9F2DB695A700F9A61E /* FirebaseFirestore */; };
 		77C5EC452DE6214E00AD1519 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 77C5EC442DE6214E00AD1519 /* Alamofire */; };
 		77F46D2E2DD03FE900EC18DE /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 77F46D2D2DD03FE900EC18DE /* SDWebImageSwiftUI */; };
+		B40C59D72F14B3E6007311B4 /* AppBlogDATNTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40C59D52F14B3E6007311B4 /* AppBlogDATNTests.swift */; };
+		B44313B22F0F53300055E675 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = B44313B12F0F53300055E675 /* SQLite */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,17 +49,13 @@
 		77208C6C2DB68B7B00F9A61E /* AppBlogDATN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppBlogDATN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77208C7C2DB68B7E00F9A61E /* AppBlogDATNTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppBlogDATNTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		77208C862DB68B7E00F9A61E /* AppBlogDATNUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppBlogDATNUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B40C59D52F14B3E6007311B4 /* AppBlogDATNTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBlogDATNTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		77208C6E2DB68B7B00F9A61E /* AppBlogDATN */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = AppBlogDATN;
-			sourceTree = "<group>";
-		};
-		77208C7F2DB68B7E00F9A61E /* AppBlogDATNTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AppBlogDATNTests;
 			sourceTree = "<group>";
 		};
 		77208C892DB68B7E00F9A61E /* AppBlogDATNUITests */ = {
@@ -72,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B44313B22F0F53300055E675 /* SQLite in Frameworks */,
 				77C5EC452DE6214E00AD1519 /* Alamofire in Frameworks */,
 				7701EA922E080E71000E0904 /* FirebaseStorage in Frameworks */,
 				77F46D2E2DD03FE900EC18DE /* SDWebImageSwiftUI in Frameworks */,
@@ -100,7 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				77208C6E2DB68B7B00F9A61E /* AppBlogDATN */,
-				77208C7F2DB68B7E00F9A61E /* AppBlogDATNTests */,
+				B40C59D62F14B3E6007311B4 /* AppBlogDATNTests */,
 				77208C892DB68B7E00F9A61E /* AppBlogDATNUITests */,
 				77208C6D2DB68B7B00F9A61E /* Products */,
 				B58F0C55A18EDE32124EB3B3 /* Pods */,
@@ -115,6 +114,14 @@
 				77208C862DB68B7E00F9A61E /* AppBlogDATNUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B40C59D62F14B3E6007311B4 /* AppBlogDATNTests */ = {
+			isa = PBXGroup;
+			children = (
+				B40C59D52F14B3E6007311B4 /* AppBlogDATNTests.swift */,
+			);
+			path = AppBlogDATNTests;
 			sourceTree = "<group>";
 		};
 		B58F0C55A18EDE32124EB3B3 /* Pods */ = {
@@ -149,6 +156,7 @@
 				77F46D2D2DD03FE900EC18DE /* SDWebImageSwiftUI */,
 				77C5EC442DE6214E00AD1519 /* Alamofire */,
 				7701EA912E080E71000E0904 /* FirebaseStorage */,
+				B44313B12F0F53300055E675 /* SQLite */,
 			);
 			productName = AppBlogDATN;
 			productReference = 77208C6C2DB68B7B00F9A61E /* AppBlogDATN.app */;
@@ -166,9 +174,6 @@
 			);
 			dependencies = (
 				77208C7E2DB68B7E00F9A61E /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				77208C7F2DB68B7E00F9A61E /* AppBlogDATNTests */,
 			);
 			name = AppBlogDATNTests;
 			productName = AppBlogDATNTests;
@@ -233,6 +238,7 @@
 				77208C9E2DB695A700F9A61E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				77F46D2C2DD03FE900EC18DE /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				77C5EC432DE6214E00AD1519 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				B44313B02F0F53300055E675 /* XCRemoteSwiftPackageReference "SQLite.swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 77208C6D2DB68B7B00F9A61E /* Products */;
@@ -282,6 +288,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B40C59D72F14B3E6007311B4 /* AppBlogDATNTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -623,6 +630,14 @@
 				minimumVersion = 3.1.3;
 			};
 		};
+		B44313B02F0F53300055E675 /* XCRemoteSwiftPackageReference "SQLite.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.15.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -645,6 +660,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 77F46D2C2DD03FE900EC18DE /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
+		};
+		B44313B12F0F53300055E675 /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B44313B02F0F53300055E675 /* XCRemoteSwiftPackageReference "SQLite.swift" */;
+			productName = SQLite;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -7,19 +7,23 @@
 import SwiftUI
 
 struct HomeModule: View {
-    @State var coordinator: HomeCoordinator
-    
+    @State var homeCoordinator: HomeCoordinator
+
     var body: some View {
-        NavigationStack(path: $coordinator.path) {
+        NavigationStack(path: $homeCoordinator.path) {
             HomeTabView()
-                .environment(coordinator)
+                .navigationDestination(for: HomeCoordinator.Screen.self) { screen in
+                    switch screen {
+                    case .postDetail(let postData):
+                        PostDetailView(post: postData)
+                    case .test:
+                        Text("Test")
+                    }
+                }
+                .navigationBarTitleDisplayMode(.large)
         }
-        .navigationDestination(for: HomeCoordinator.Screen.self) { screen in
-            switch screen {
-            case .postDetail(let postDetail):
-                PostDetailView(post: postDetail)
-            }
-        }
+        .environment(homeCoordinator)
+
     }
     
 }
