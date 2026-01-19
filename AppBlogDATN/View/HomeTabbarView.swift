@@ -49,10 +49,10 @@ struct HomeTabbarView: View {
                 switch selectedTab {
                 case .home:
                     HomeModule(homeCoordinator: coordinator.homeCoordinator)
+                        .environment(coordinator.homeCoordinator)
 
                 case .search:
-                    HomeModule(homeCoordinator: coordinator.homeCoordinator)
-
+                    SearchCoordinatorView(seachCoordinator: coordinator.searchCoordinator)
                 case .bookmark:
                     BookmarkCoordinatorView(bookmark: coordinator.bookMarkCoordinator)
 

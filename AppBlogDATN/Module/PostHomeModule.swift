@@ -5,14 +5,18 @@
 //  Created by TEAMS on 1/11/26.
 //
 
+import SwiftUI
+
 struct PostHomeModule {
 
     private static var cachedViewModel: HomePostViewModel?
 
     @MainActor
-    static func makeView(postStore: PostStore) -> PostHomeView {
+    static func makeView(postStore: PostStore, ns: Namespace.ID? = nil) -> PostHomeView {
         if cachedViewModel == nil {
             let repository = PostRepositoryImpl()
+            
+            let translateRepository = TranslateRepositoryImpl()
             
             let fetchPostsUseCase = FetchPostByCategoryUseCase(
                 repository: repository
@@ -22,10 +26,20 @@ struct PostHomeModule {
                 repository: repository
             )
             
+            let translateUseCase = TranslateTextUseCase(
+                postRepository: repository,
+                translationRepository: translateRepository
+            )
+            
+            let postTranslateService = PostTranslateServiceImpl(
+                translateUseCase: translateUseCase
+            )
+            
             cachedViewModel = HomePostViewModel(
                 postStore: postStore,
                 fetchPosts: fetchPostsUseCase,
-                markPostBookmarkUsecase: markPostUseCase
+                markPostBookmarkUsecase: markPostUseCase,
+                postTranslateService: postTranslateService
             )
         }
 

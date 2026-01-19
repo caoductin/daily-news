@@ -25,6 +25,8 @@ enum APIEndpoint {
     case getPostsRelated(postId: String)
     case getPaginatedPosts(currentPage: Int, limit: Int)
     case getPostByCategory(category: Category?, currentPage: Int, limit: Int)
+    case getSummaryPost(postID: String, lang: String)
+    case searchSemantic
     
     case bookmark
     case getBookmarks(startndex: Int, limit: Int)
@@ -34,6 +36,7 @@ enum APIEndpoint {
     
     case translateText
     case login
+    case loginWithGoogle
     
     var path: String {
         switch self {
@@ -54,6 +57,8 @@ enum APIEndpoint {
             return "/api/post/bookmarks?startIndex=\(startIndex)&limit=\(limit)"
             
         //MARK: POSTS
+        case .searchSemantic:
+            return "/api/post/searchSemantic"
         case .getPosts:
             return "/api/post/getposts"
         case .getPaginatedPosts(let currentPage, let limit):
@@ -66,6 +71,8 @@ enum APIEndpoint {
             return "/api/post/create"
         case .getPostsRelated(let postId):
             return "/api/post/relatedPosts/\(postId)"
+        case .getSummaryPost(let postID, let lang):
+            return "/api/post/\(postID)/summary/?lang=\(lang)"
         case .getPostByCategory(let category, let page, let limit):
             var queryItems: [String] = [
                 "startIndex=\(page)",
@@ -84,6 +91,8 @@ enum APIEndpoint {
             return "api/translation/text"
         case .login:
             return "api/auth/signin"
+        case .loginWithGoogle:
+            return "/api/auth/googleSignin"
         }
     }
     

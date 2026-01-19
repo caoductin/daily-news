@@ -11,17 +11,18 @@ import SwiftUI
 struct BookmarkCoordinatorView: View {
     @Environment(PostStore.self) var postStore
     @State var bookmark: BookmarkCoordinator
-    
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $bookmark.path) {
             BookmarkModule.makeView(postStore: postStore)
-                .navigationDestination(for: BookmarkCoordinator.Screen.self) { screen in
+                .navigationDestination(for: BookmarkCoordinator.Screen.self) {
+                    screen in
                     switch screen {
-                    case .postDetail(let postData):
-                        PostDetailView(post: postData)
+                    case .postDetail(let postData, let ns):
+                        PostDetailView(post: postData, ns: ns)
                     }
                 }
-                .environment(bookmark)
         }
+        .environment(bookmark)
     }
 }

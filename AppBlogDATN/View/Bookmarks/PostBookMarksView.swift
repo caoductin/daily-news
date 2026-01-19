@@ -10,6 +10,7 @@ import SwiftUI
 struct BookmarkView: View {
     @Environment(BookmarkCoordinator.self) private var bookmarkCoordinator
     @State private var viewModel: BookmarkViewModel
+    @Namespace private var namespace
     
     init(viewModel: BookmarkViewModel) {
         _viewModel = State(initialValue: viewModel)
@@ -48,6 +49,7 @@ struct BookmarkView: View {
             } label: {
                 rowPost(for: post)
             }
+            .modifier(PressedScale(scale: 0.94))
         }
     }
     
@@ -61,6 +63,12 @@ struct BookmarkView: View {
                 }
             }
         )
+        .scrollTransition { content, phase in
+            content
+                .opacity(phase.isIdentity ? 1 : 0.3)
+                .scaleEffect(phase.isIdentity ? 1 : 0.8)
+                .blur(radius: phase.isIdentity ? 0 : 2)
+        }
         .onAppear {
             if post.id == viewModel.posts.last?.id {
                 Task {
@@ -68,10 +76,10 @@ struct BookmarkView: View {
                 }
             }
         }
+        .navigationTransition(.zoom(sourceID: post.id, in: namespace))
     }
     
     private func openPostDetail(postData: PostDetailModel) {
-        print("This icall")
-        bookmarkCoordinator.push(.postDetail(postData))
+        bookmarkCoordinator.push(.postDetail(postData, namespace))
     }
 }

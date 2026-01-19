@@ -13,6 +13,8 @@
 		77F46D2E2DD03FE900EC18DE /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 77F46D2D2DD03FE900EC18DE /* SDWebImageSwiftUI */; };
 		B40C59D72F14B3E6007311B4 /* AppBlogDATNTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40C59D52F14B3E6007311B4 /* AppBlogDATNTests.swift */; };
 		B44313B22F0F53300055E675 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = B44313B12F0F53300055E675 /* SQLite */; };
+		B47C1B532F15EAC80008DBEF /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = B47C1B522F15EAC80008DBEF /* GoogleSignIn */; };
+		B47C1B552F15EAC80008DBEF /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B47C1B542F15EAC80008DBEF /* GoogleSignInSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,9 +54,22 @@
 		B40C59D52F14B3E6007311B4 /* AppBlogDATNTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBlogDATNTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B47C1B5B2F15EEDF0008DBEF /* Exceptions for "AppBlogDATN" folder in "AppBlogDATN" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 77208C6B2DB68B7B00F9A61E /* AppBlogDATN */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		77208C6E2DB68B7B00F9A61E /* AppBlogDATN */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B47C1B5B2F15EEDF0008DBEF /* Exceptions for "AppBlogDATN" folder in "AppBlogDATN" target */,
+			);
 			path = AppBlogDATN;
 			sourceTree = "<group>";
 		};
@@ -72,9 +87,11 @@
 			files = (
 				B44313B22F0F53300055E675 /* SQLite in Frameworks */,
 				77C5EC452DE6214E00AD1519 /* Alamofire in Frameworks */,
+				B47C1B552F15EAC80008DBEF /* GoogleSignInSwift in Frameworks */,
 				7701EA922E080E71000E0904 /* FirebaseStorage in Frameworks */,
 				77F46D2E2DD03FE900EC18DE /* SDWebImageSwiftUI in Frameworks */,
 				77208CA02DB695A700F9A61E /* FirebaseFirestore in Frameworks */,
+				B47C1B532F15EAC80008DBEF /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,6 +174,8 @@
 				77C5EC442DE6214E00AD1519 /* Alamofire */,
 				7701EA912E080E71000E0904 /* FirebaseStorage */,
 				B44313B12F0F53300055E675 /* SQLite */,
+				B47C1B522F15EAC80008DBEF /* GoogleSignIn */,
+				B47C1B542F15EAC80008DBEF /* GoogleSignInSwift */,
 			);
 			productName = AppBlogDATN;
 			productReference = 77208C6C2DB68B7B00F9A61E /* AppBlogDATN.app */;
@@ -239,6 +258,7 @@
 				77F46D2C2DD03FE900EC18DE /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				77C5EC432DE6214E00AD1519 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				B44313B02F0F53300055E675 /* XCRemoteSwiftPackageReference "SQLite.swift" */,
+				B47C1B512F15EAC80008DBEF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 77208C6D2DB68B7B00F9A61E /* Products */;
@@ -444,10 +464,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AppBlogDATN/Preview Content\"";
+				DEVELOPMENT_TEAM = M99R65KGB5;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AppBlogDATN/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -474,10 +496,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AppBlogDATN/Preview Content\"";
+				DEVELOPMENT_TEAM = M99R65KGB5;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AppBlogDATN/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -638,6 +662,14 @@
 				minimumVersion = 0.15.4;
 			};
 		};
+		B47C1B512F15EAC80008DBEF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -665,6 +697,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B44313B02F0F53300055E675 /* XCRemoteSwiftPackageReference "SQLite.swift" */;
 			productName = SQLite;
+		};
+		B47C1B522F15EAC80008DBEF /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B47C1B512F15EAC80008DBEF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		B47C1B542F15EAC80008DBEF /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B47C1B512F15EAC80008DBEF /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

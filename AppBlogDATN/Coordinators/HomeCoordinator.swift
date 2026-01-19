@@ -14,8 +14,7 @@ class HomeCoordinator: Coordinator {
     var path = NavigationPath()
 
     enum Screen: Hashable {
-        case postDetail(PostDetailModel)
-        case test
+        case postDetail(PostDetailModel, Namespace.ID?)
     }
 }
 

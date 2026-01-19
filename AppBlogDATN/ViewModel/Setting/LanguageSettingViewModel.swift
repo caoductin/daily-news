@@ -21,6 +21,7 @@ class LanguageSettingViewModel: ObservableObject {
         let storedLang = UserDefaults.standard.string(forKey: "appLanguage") ?? SupportedLang.vietnamese.rawValue
         let current = SupportedLang(rawValue: storedLang) ?? .vietnamese
         _selectedLang = Published(initialValue: current)
+        print("this is app lnauage \(appLanguage)")
     }
     
     var filteredLanguages: [SupportedLang] {

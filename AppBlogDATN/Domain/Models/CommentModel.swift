@@ -18,3 +18,12 @@ struct CommentModel {
     let userInfo: UserCommentModel?
     let isLikedByCurrentUser: Bool
 }
+
+
+class AnimationContainer {
+    var id: Namespace.ID
+    
+    init(id: Namespace.ID) {
+        self.id = id
+    }
+}

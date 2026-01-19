@@ -14,16 +14,13 @@ struct HomeModule: View {
             HomeTabView()
                 .navigationDestination(for: HomeCoordinator.Screen.self) { screen in
                     switch screen {
-                    case .postDetail(let postData):
-                        PostDetailView(post: postData)
-                    case .test:
-                        Text("Test")
+                    case .postDetail(let postData, let ns):
+                        PostDetailView(post: postData, ns: ns)
                     }
                 }
                 .navigationBarTitleDisplayMode(.large)
         }
         .environment(homeCoordinator)
-
+        
     }
-    
 }

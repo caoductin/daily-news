@@ -14,8 +14,12 @@ struct ProfileView: View {
     
     var body: some View {
         VStack(spacing: 30) {
-            RemoteImageView(imageURl: userVM.currentUser?.profilePicture ?? "", cornerRadius: .infinity)
-                .clipShape(Circle())
+            RemoteImageView(
+                imageURl: userVM.currentUser?.profilePicture ?? "",
+                cornerRadius: .infinity
+            )
+            .clipShape(Circle())
+            
             VStack(spacing: 8) {
                 Text(userVM.currentUser?.username ?? "Undefined")
                 Text("Email")
@@ -29,11 +33,6 @@ struct ProfileView: View {
                     .previewLayout(.sizeThatFits)
                 
                 Text("Password")
-                    .bold()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                SecureTextField(password: $email)
-                
-                Text("Confirm Passwrod")
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .leading)
                 SecureTextField(password: $email)

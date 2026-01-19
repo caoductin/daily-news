@@ -72,15 +72,15 @@ enum SupportedLang: String, CaseIterable, Identifiable {
     
     var displayName: String {
         switch self {
-        case .vietnamese: return "Vietnamese"
-        case .english: return "English"
-        case .japanese: return "Japanese"
-        case .korean: return "Korean"
-        case .french: return "French"
-        case .chinese: return "Chinese"
+        case .vietnamese: return "Việt Nam"
+        case .english:    return "United States"
+        case .japanese:   return "日本"
+        case .korean:     return "대한민국"
+        case .french:     return "France"
+        case .chinese:    return "中国"
         }
     }
-    
+
     var flag: String {
         switch self {
         case .vietnamese: return "🇻🇳"

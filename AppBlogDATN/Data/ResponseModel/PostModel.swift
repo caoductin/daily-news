@@ -108,7 +108,7 @@ extension PostDetailModel {
         
         print("this is translateResult \(translateResult)")
         return .init(
-            id: UUID().uuidString,
+            id: id,
             userId: userId,
             content: translateResult.content,
             category: category,

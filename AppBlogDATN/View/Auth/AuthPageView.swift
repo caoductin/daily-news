@@ -9,14 +9,15 @@ import SwiftUI
 
 struct AuthPageView: View {
     @State var selection: Int = 0
-    @StateObject var loginVM = LoginViewModel()
+//    @StateObject var loginVM = LoginViewModel()
     @State var currentTab: Authtab = .signIn
+    
     var body: some View {
         VStack {
             TopTab(tabs: Authtab.allCases, currentTab: $currentTab)
             
             TabView(selection: $currentTab.animation()) {
-                LoginView(loginVM: loginVM)
+                AuthenModule.makeView()
                     .tag(Authtab.signIn)
                 SignUpView()
                     .tag(Authtab.signUp)
@@ -24,7 +25,7 @@ struct AuthPageView: View {
             .tabViewStyle(.page)
             .indexViewStyle(.page(backgroundDisplayMode: .never))
         }
-        .loadingViewBuilder(isLoading: loginVM.isLoading)
+//        .loadingViewBuilder(isLoading: loginVM.isLoading)
     }
 }
 

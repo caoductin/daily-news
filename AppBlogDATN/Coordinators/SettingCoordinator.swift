@@ -22,7 +22,4 @@ import SwiftUI
         case theme
     }
     
-    func demo() {
-        print("Navigatyion path", path.count, path)
-    }
 }

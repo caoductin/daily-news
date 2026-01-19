@@ -15,24 +15,24 @@ struct SettingModule: View {
                 .environment(coordinator)
                 .navigationDestination(for: SettingCoordinator.Screen.self) { screen in
                     switch screen {
-                    case .theme:
-                        ThemeView()
-                    case .profile:
-                        ProfileView()
-                    case .createPost:
-                        PostCreateView()
-                    case .information:
-                        AppInformationView()
-                    case .language:
-                        LanguageSettingView()
-                    case .deletePost:
-                        PostDeleteView()
+                        case .theme:
+                            ThemeView()
+                        case .profile:
+                            ProfileView()
+                        case .createPost:
+                            PostCreateView()
+                        case .information:
+                            AppInformationView()
+                        case .language:
+                            LanguageSettingView()
+                        case .deletePost:
+                            PostDeleteView()
                     }
                 }
                 .navigationTitle("Setting")
         }
         
         
-     
+        
     }
 }

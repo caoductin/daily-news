@@ -7,9 +7,21 @@ struct CategoryModule {
         if cachedViewModels[category] == nil {
             let repository = PostRepositoryImpl()
             
+            let translateRepository = TranslateRepositoryImpl()
+            
+            let translateUseCase = TranslateTextUseCase(
+                postRepository: repository,
+                translationRepository: translateRepository
+            )
+            
+            let postTranslateService = PostTranslateServiceImpl(
+                translateUseCase: translateUseCase
+            )
+            
             let fetchByCategory = FetchPostByCategoryUseCase(
                 repository: repository
             )
+            
             let markPostBookmarkUsecase = MarkPostAsBookmarkUsecase(
                 repository: repository
             )
@@ -18,7 +30,8 @@ struct CategoryModule {
                 postStore: postStore,
                 category: category,
                 markPostBookmarkUsecase: markPostBookmarkUsecase,
-                fetchPostCategory: fetchByCategory
+                fetchPostCategory: fetchByCategory,
+                postTranslateService: postTranslateService
             )
             
             cachedViewModels[category] = viewModel

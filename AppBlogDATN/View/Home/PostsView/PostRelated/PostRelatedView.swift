@@ -9,40 +9,73 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct PostRelatedView: View {
+    @Environment(\.locale) private var locale
     var postRelated: PostDetailModel
+    var onToggleBookmark: (() -> Void)?
     
     var body: some View {
-        
-        HStack(alignment: .top, spacing: 12) {
-//            RemoteImageView(imageURl: postRelated.image, width: UIScreen.main.bounds.width / 2 - 12 );
-            AnimatedImage(
-                url: postRelated.image,
-                placeholderImage: UIImage(named: "defaultPost")
-            )
-            .resizable()
-            .indicator(.activity)
-            .transition(.fade(duration: 0.5))
-            .frame(width: UIScreen.main.bounds.width / 2 - 12)
-            .clipped()
-            .cornerRadius(12)
-            .shadow(radius: 2)
-            .overlay {
-                LinearGradient(
-                    colors: [Color.black.opacity(0.8), .clear],
-                    startPoint: .bottom,
-                    endPoint: .top
+        VStack(alignment: .leading, spacing: 0) {
+            ZStack(alignment: .topTrailing) {
+                AnimatedImage(
+                    url: postRelated.image,
+                    placeholderImage: UIImage(named: "defaultPost")
                 )
+                .resizable()
+                .indicator(.activity)
+                .transition(.fade(duration: 0.5))
+                .aspectRatio(16/9, contentMode: .fill)
+                .frame(height: 160)
+                .clipped()
+                .overlay(alignment: .topTrailing) {
+                    BookmarkButton(isBookmarked: postRelated.isBookmarked) {
+                        onToggleBookmark?()
+                    }
+                    .padding()
+                    .fixedSize()
+                }
             }
-
-            VStack(alignment: .leading) {
+            
+            // Content Section
+            VStack(alignment: .leading, spacing: 8) {
+                // Category Badge
+                HStack(spacing: 6) {
+                    Circle()
+                        .fill(postRelated.category.color.opacity(0.8))
+                        .frame(width: 6, height: 6)
+                    
+                    Text(postRelated.category.title)
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                        .textCase(.uppercase)
+                }
+                .padding(.top, 12)
+                
+                // Title
                 Text(postRelated.title)
-                    .lineLimit(3)
-              //  Text("\(postRelated.updatedAt.timeAgoFromISO8601())")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(.primary)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+                
+                HStack(spacing: 4) {
+                    Image(systemName: "clock")
+                        .font(.caption2)
+                    
+                    Text(postRelated.updatedAt.timeAgoDisplay(locale: locale))
+                        .font(.caption)
+                }
+                .foregroundStyle(.secondary)
+                .padding(.bottom, 12)
             }
-        }.frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 12)
+        }
+        .background(Color(.systemBackground))
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 2)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(.systemGray5), lineWidth: 0.5)
+        )
     }
 }
-
-//#Preview {
-//    PostRelatedView()
-//}

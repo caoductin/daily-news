@@ -26,7 +26,7 @@ struct TranslateRepositoryImpl: TranslateRepository {
             "text": text
         ]
         let response = try await APIServices.shared.sendRequestForTemp(
-            from: "translation/text",
+            from: "https://mimamoriai.com/api/translation/text",
             type: TranslateTempResponse.self,
             method: .POST,
             body: body

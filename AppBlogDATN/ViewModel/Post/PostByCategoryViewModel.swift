@@ -23,6 +23,8 @@ class PostByCategoryViewModel {
     private let category: Category
     private let fetchPostCategory: FetchPostByCategoryUseCase
     private let markPostBookmarkUsecase: MarkPostAsBookmarkUsecase
+    private let postTranslateService: PostTranslateService
+
     let postStore: PostStore
 
     var posts: [PostDetailModel] {
@@ -33,12 +35,14 @@ class PostByCategoryViewModel {
         postStore: PostStore,
         category: Category,
         markPostBookmarkUsecase: MarkPostAsBookmarkUsecase,
-        fetchPostCategory: FetchPostByCategoryUseCase
+        fetchPostCategory: FetchPostByCategoryUseCase,
+        postTranslateService: PostTranslateService
     ) {
         self.fetchPostCategory = fetchPostCategory
         self.category = category
         self.postStore = postStore
         self.markPostBookmarkUsecase = markPostBookmarkUsecase
+        self.postTranslateService = postTranslateService
     }
   
     // MARK: - Fetch

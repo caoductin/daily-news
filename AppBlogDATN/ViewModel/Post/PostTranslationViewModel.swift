@@ -18,17 +18,19 @@ class PostDetailViewModel {
     var isLoading: Bool = false
     var errorMessage: String?
     var sumaryText: String?
-    var isSummaryText: Bool = false
     private var translationCaches: [SupportedLang: PostDetailModel] = [:]
-    private var sumaryTextCaches: [SupportedLang: String] = [:]
     private var originLang: SupportedLang = .vietnamese
     private var task: Task<Void, Never>? = nil
+    
+    private let summaryUseCase: PostSummaryUseCase = {
+        let repo = PostSumarryRepositoryImpl()
+        return PostSummaryUseCase(repository: repo)
+    }()
     
     init(post: PostDetailModel) {
         self.displayingPost = post
         Task {
             let detectLang = await Self.detectLanguage(of: post.content.htmlToPlainString())
-            print("detetectLange \(detectLang)")
             originLang = detectLang ?? .vietnamese
             self.translationCaches[originLang] = post
         }
@@ -58,51 +60,24 @@ class PostDetailViewModel {
         isLoading = false
     }
     
-    func summaryText(to lang: SupportedLang, onCompleted: (() -> Void)? = nil) {
-        var postSumary = displayingPost
-        isSummaryText = true
-        task = Task {
-            do {
-                if let cachesTranslate = checkCachesLanguage(.english) {
-                    postSumary = cachesTranslate
-                } else {
-                    postSumary = try await postSumary.translate("en")
-                    translationCaches[.english] = postSumary
-                }
-                            
-                if let summaryTextCaches = sumaryTextCaches[lang] {
-                    sumaryText = summaryTextCaches
-                    isSummaryText = false
-                    onCompleted?()
-                    return
-                } else if let summaryTextCacheEngLish = sumaryTextCaches[.english] {
-                    let resultTranslate = try await TranslateViewModel.shared.translateTemp(text: summaryTextCacheEngLish.htmlToPlainString(), targetLanguage: lang.rawValue)
-                    sumaryText = resultTranslate.translatedText
-                    isSummaryText = false
-                    onCompleted?()
-                }
-                
-                let textToSummary = preprocessForSummarization(from: postSumary.content, title: postSumary.title)
-                let body = ["text" : textToSummary]
-                print("this is body \(body)")
-                let response = try await APIServices.shared.sendRequestForTemp(from: URLAdvance.sumaryText.rawString, type: SumaryTextResponse.self, method: .POST, body: body)
-                let translateSummary = try await TranslateViewModel.shared.translateTemp(text: response.summary.htmlToPlainString(), targetLanguage: lang.rawValue)
-                print("this iss texxt \(response.summary)")
-                print("summarytext \(isSummaryText)")
-                await MainActor.run {
-                    sumaryTextCaches[.english] = response.summary.htmlToPlainString()
-                    sumaryText = translateSummary.translatedText.htmlToPlainString()
-                    sumaryTextCaches[lang] = sumaryText
-                    isSummaryText = false
-                    onCompleted?()
-                }
-            } catch(let error) {
-                await MainActor.run {
-                    isSummaryText = false
-                    onCompleted?()
-                }
-                print("error for sumary text \(error.localizedDescription)")
+    func loadSummaryText(lang: SupportedLang) async {
+        isLoading = true
+        errorMessage = nil
+        print("this is selected langaue\(lang)")
+        do {
+            defer {
+                isLoading = false
             }
+            let result = try await summaryUseCase.excute(
+                postID: displayingPost.id,
+                language: lang.rawValue
+            )
+            print("this is summaryText\(result)")
+            self.sumaryText = result.summary
+            isLoading = false
+        } catch {
+            isLoading = false
+            errorMessage = error.localizedDescription
         }
     }
     

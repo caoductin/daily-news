@@ -11,7 +11,7 @@ import Translation
 struct SettingView: View {
     @Environment(SettingCoordinator.self) private var settingCoordinator
     let isLogin = UserManager.shared.isLogin
-    
+
     var body: some View {
         VStack {
             List {
@@ -38,7 +38,7 @@ struct SettingView: View {
         }
         .navigationTitle("Setting")
     }
-    
+
     @ViewBuilder
     func LabelItem(option: SettingOptions) -> some View {
         Button {
@@ -53,29 +53,33 @@ struct SettingView: View {
                     Image(systemName: option.icons)
                 }
                 .padding(.vertical, 4)
-                
+
                 Spacer()
-                
+
                 Image(systemName: "chevron.right")
                     .foregroundColor(.gray)
             }
         }
         .buttonStyle(.borderless)
     }
-    
+
     @ViewBuilder
     func LogoutSection() -> some View {
-        Section(header: Text("Logout")
-            .font(.headline)
-            .foregroundColor(.gray))
-        {
+        Section(
+            header: Text("Logout")
+                .font(.headline)
+                .foregroundColor(.gray)
+        ) {
             Button(
                 role: .destructive,
                 action: {
                     UserManager.shared.logout()
                 },
                 label: {
-                    Label("Logout",systemImage: "rectangle.portrait.and.arrow.forward.fill")
+                    Label(
+                        "Logout",
+                        systemImage: "rectangle.portrait.and.arrow.forward.fill"
+                    )
                 }
             )
         }
@@ -94,12 +98,12 @@ enum SettingCategory: String, CaseIterable, Identifiable {
     case general
     case posts
     case account
-    
+
     var id: String {
         rawValue
     }
-    
-    var title: String {
+
+    var title: LocalizedStringKey {
         switch self {
         case .account: "Account"
         case .posts: "Posts"
@@ -115,26 +119,26 @@ enum SettingOptions: String, CaseIterable, Identifiable {
     case profile
     case deletePost
     case theme
-    
+
     var id: String { self.rawValue }
-    
+
     var screen: SettingCoordinator.Screen {
         switch self {
         case .language:
-                .language
+            .language
         case .information:
-                .information
+            .information
         case .createPost:
-                .createPost
+            .createPost
         case .profile:
-                .profile
+            .profile
         case .deletePost:
-                .deletePost
+            .deletePost
         case .theme:
-                .theme
+            .theme
         }
     }
-    
+
     var title: LocalizedStringKey {
         switch self {
         case .language:
@@ -151,7 +155,7 @@ enum SettingOptions: String, CaseIterable, Identifiable {
             return "Theme"
         }
     }
-    
+
     var category: SettingCategory {
         switch self {
         case .profile:
@@ -162,7 +166,7 @@ enum SettingOptions: String, CaseIterable, Identifiable {
             return .posts
         }
     }
-    
+
     var icons: String {
         switch self {
         case .language:

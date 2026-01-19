@@ -6,24 +6,31 @@
 //
 
 import Foundation
+import UIKit
 
 @MainActor
-class LoginViewModel: ObservableObject {
-    @Published var email = ""
-    @Published var password = ""
-    @Published var isLoading = false
-    @Published var userData: UserData?
-    @Published var errorMessage: String?
-    @Published var isError: Bool = false
+@Observable
+class LoginViewModel {
+    var email = ""
+    var password = ""
+    var isLoading = false
+    var userData: UserData?
+    var errorMessage: String?
+    var isError: Bool = false
+    
     private let authService = AuthService()
+    private let signInGoogleUseCase: SignInGoogleUseCase
+    
+    init(signInGoolgeUsecase: SignInGoogleUseCase ) {
+        self.signInGoogleUseCase = signInGoolgeUsecase
+    }
     
     func login() {
         isLoading = true
-       
+        
         userData = UserData.setUser(userName: "", email: email, password: password)
         guard let userData = userData else {
             errorMessage = "Please enter the fill"
-            print("Please enter the fill")
             return
         }
         
@@ -41,4 +48,14 @@ class LoginViewModel: ObservableObject {
             }
         }
     }
+    
+    func signInGoogle(presenting: UIViewController) async {
+        do {
+            let data = try await signInGoogleUseCase.execute(presenting: presenting)
+            UserManager.shared.login(authen: data)
+        } catch {
+            print("this is error\(error)")
+        }
+    }
+    
 }

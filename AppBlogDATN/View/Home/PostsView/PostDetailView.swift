@@ -8,40 +8,44 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-enum NavigationRoute: Hashable {
-    case imageDetail(URL)
-    case userProfile(String)
-    case settings
-}
-
 struct PostDetailView: View {
     @StateObject var commentsPost: CommentViewModel = CommentViewModel()
-    @StateObject var postRelatedVM: PostRelatedViewModel = PostRelatedViewModel()
+    @StateObject var postRelatedVM: PostRelatedViewModel = {
+        let repository = PostRepositoryImpl()
+        let markBookmarkUsecase = MarkPostAsBookmarkUsecase(repository: repository)
+        return PostRelatedViewModel(markPostBookmarkUsecase: markBookmarkUsecase)
+    }()
     
     @State var selectedLang: SupportedLang = .vietnamese
     @State private var relatedPostToNavigate: PostDetailResponse?
     @State private var commentText = ""
     @State private var previousLang: SupportedLang = .vietnamese
     @State private var viewModel: PostDetailViewModel
-    init(post: PostDetailModel) {
+    
+    let ns: Namespace.ID?
+    
+    init(post: PostDetailModel, ns: Namespace.ID? = nil) {
+        self.ns = ns
         _viewModel = State(wrappedValue: PostDetailViewModel(post: post))
     }
     
     @State private var isSummaryDialogPresented = false
-    @State private var isSummaryText: Bool = false
+    @State private var isSummarizing: Bool = false
     var body: some View {
         ZStack {
             VStack {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 10) {
-                        SummaryButtonView(summaryText: $viewModel.sumaryText, isSummarizing: $isSummaryText) {
-                                viewModel.summaryText(to: selectedLang) {
-                                    isSummaryDialogPresented = true
-                                    isSummaryText = false
+                        SummaryButtonView(summaryText: $viewModel.sumaryText, isSummarizing: $isSummarizing) {
+                            Task {
+                                isSummarizing = true
+                                await viewModel.loadSummaryText(lang: selectedLang)
+                                isSummaryDialogPresented = true
+                                isSummarizing = false
                             }
                         }
                         SpeechTestView(selectedLanguage: selectedLang.rawValue, textToSpeech: viewModel.displayingPost.content)
-                        BodyPostView(viewModel: viewModel)
+                        BodyPostView(viewModel: viewModel, ns: ns)
                             .id(viewModel.displayingPost.id)
                         CommentsPostView(commentVM: commentsPost)
                         PostRelatedListView(viewModel: postRelatedVM) { selectedPost in
@@ -67,7 +71,7 @@ struct PostDetailView: View {
                 TranslateToolbarButton(selectedLang: $selectedLang) { lang in
                     Task {
                         await viewModel.translate(to: lang)
-                
+                        
                     }
                 }
             }
@@ -77,7 +81,6 @@ struct PostDetailView: View {
             viewModel.isLoading = true
             let detected = await PostDetailViewModel.detectLanguage(of: viewModel.displayingPost.content.htmlToPlainString())
             selectedLang = detected ?? .vietnamese
-            print("this is detectTect Language \(detected)")
             viewModel.isLoading = false
             
         }
@@ -86,29 +89,21 @@ struct PostDetailView: View {
     }
 }
 
-//#Preview {
-//    let mockPost = PostDetailModel(
-//        id: "6824be39121596abb8df7348",
-//        userId: "user001",
-//        content: "Liên Hợp Quốc quan ngại về chiến dịch không kích của Mỹ vào Iran.Tôi rất quan ngại về việc Mỹ sử dụng vũ lực chống lại Iran hôm nay.",
-//        category: .home,
-//        title: "The anniversary ",
-//        slug: "understanding-swift-concurrency",
-//        image: URL(string:"https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/09/how-to-write-a-blog-post.png"),
-//        createdAt: .now,
-//        updatedAt: .now
-//    )
-//    
-//    let mockPostResponse = PostResponse(
-//        posts: [mockPost, mockPost],
-//        totalPosts: 2,
-//        lastMonthPosts: 1
-//    )
-//    let postViewModelMock = PostViewModel()
-//    NavigationStack {
-//        PostDetailView(post: mockPost)
-//    }
-//}
+extension View {
+    @ViewBuilder
+    func applyZoomIfNeeded<ID: Hashable>(
+        id: ID,
+        namespace: Namespace.ID?
+    ) -> some View {
+        if let namespace {
+            self.navigationTransition(
+                .zoom(sourceID: id, in: namespace)
+            )
+        } else {
+            self
+        }
+    }
+}
 
 extension PostDetailView {
     private func createComment() {
@@ -131,24 +126,36 @@ extension PostDetailView {
 struct BodyPostView: View {
     @Bindable var viewModel: PostDetailViewModel
     @State private var selectedImageURL: URL?
+    
+    let ns: Namespace.ID?
+    
+    init(
+        viewModel: PostDetailViewModel,
+        ns: Namespace.ID? = nil
+    ) {
+        self.viewModel = viewModel
+        self.ns = ns
+    }
+    
     var body: some View {
         VStack(alignment: .leading){
             Text(viewModel.displayingPost.title)
                 .font(.headline)
                 .multilineTextAlignment(.leading)
-                WebImage(url: viewModel.displayingPost.image) { image in
-                    image.resizable()
-                } placeholder: {
-                    Rectangle().foregroundColor(.gray)
-                }
-                .resizable()
-                .indicator(.activity)
-                .aspectRatio(contentMode: .fit)
-                .cornerRadius(8)
-                .onTapGesture {
-                    selectedImageURL = viewModel.displayingPost.image
-                    print()
-                }
+            WebImage(url: viewModel.displayingPost.image) { image in
+                image.resizable()
+            } placeholder: {
+                Rectangle().foregroundColor(.gray)
+            }
+            .resizable()
+            .indicator(.activity)
+            .aspectRatio(contentMode: .fit)
+            .cornerRadius(8)
+            .onTapGesture {
+                selectedImageURL = viewModel.displayingPost.image
+            }
+            .applyZoomIfNeeded(id: viewModel.displayingPost.id, namespace: ns)
+            
             Text(viewModel.displayingPost.content.htmlToPlainString())
             
         }
@@ -161,7 +168,6 @@ struct BodyPostView: View {
 import Foundation
 import Combine
 import NaturalLanguage
-
 
 
 

@@ -21,12 +21,7 @@ class PostViewModel {
     var showAlert = false
     var alertMessage = ""
         
-//    private let fetchAllPosts: FetchPostsUseCase
-//
-//    init(fetchAllPosts: FetchPostsUseCase) {
-//        self.fetchAllPosts = fetchAllPosts
-//    }
-//    
+
     var searchText: String = "" {
         didSet {
             debounceSearch()
@@ -184,25 +179,29 @@ final class HomePostViewModel {
 
     // MARK: - Pagination
     private var page = 1
-    private let limit = 3
+    private let limit = 6
 
     // MARK: - Dependencies
     private let postStore: PostStore
     private let fetchPosts: FetchPostByCategoryUseCase
     private let markPostBookmarkUsecase: MarkPostAsBookmarkUsecase
+    private let postTranslateService: PostTranslateService
 
     init(
         postStore: PostStore,
         fetchPosts: FetchPostByCategoryUseCase,
-        markPostBookmarkUsecase: MarkPostAsBookmarkUsecase
+        markPostBookmarkUsecase: MarkPostAsBookmarkUsecase,
+        postTranslateService: PostTranslateService
     ) {
         self.postStore = postStore
         self.fetchPosts = fetchPosts
         self.markPostBookmarkUsecase = markPostBookmarkUsecase
+        self.postTranslateService = postTranslateService
     }
 
     func getPosts(isRefresh: Bool = false) async {
         guard !isLoading, hasNext else { return }
+
         if isRefresh {
             page = 1
             hasNext = true
@@ -218,8 +217,19 @@ final class HomePostViewModel {
                 page: page,
                 limit: limit
             )
+
             postStore.upsert(result.posts)
-            postIds.append(contentsOf: result.posts.map(\.id))
+            let newIds = result.posts.map(\.id)
+            postIds.append(contentsOf: newIds)
+
+            // 🔥 QUAN TRỌNG: auto translate nếu đang bật
+            if postStore.isTranslateEnabled {
+                await postStore.translateTitlesIfNeeded(
+                    postIds: newIds,
+                    service: postTranslateService
+                )
+            }
+
             hasNext = result.hasNext
             page += 1
         } catch {
@@ -229,6 +239,7 @@ final class HomePostViewModel {
 
         isLoading = false
     }
+
     
     func toggleBookmark(postId: String) async -> Bool{
         postStore.update(postId: postId) {

@@ -33,12 +33,32 @@ struct HomeTabView: View {
                 Text(currentCategory.title)
                     .font(.headline)
                 Button {
-//                    viewModel.toggleTranslate()
+                    Task {
+                        if postStore.isTranslateEnabled {
+                            withAnimation {
+                                postStore.isTranslateEnabled = false
+                            }
+                        } else {
+                            let postIds = postStore.allPosts().map(\.id)
+
+                            await postStore.translateTitlesIfNeeded(
+                                postIds: postIds,
+                                service: PostTranslateServiceImpl(
+                                    translateUseCase: TranslateTextUseCase(
+                                        postRepository: PostRepositoryImpl(),
+                                        translationRepository: TranslateRepositoryImpl()
+                                    )
+                                )
+                            )
+                            postStore.toggleTranslate()
+                        }
+                    }
                 } label: {
-                    Image(systemName: viewModel.isLoading
-                          ? "globe.badge.checkmark"
+                    Image(systemName: postStore.isTranslateEnabled
+                          ? "globe"
                           : "globe")
                 }
+
             }
             .padding()
         }

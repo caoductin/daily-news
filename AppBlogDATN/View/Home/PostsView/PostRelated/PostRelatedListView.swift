@@ -12,22 +12,32 @@ struct PostRelatedListView: View {
     @State private var selectedPost: PostDetailModel?
     var onSelect: ((PostDetailResponse) -> Void)? = nil
     
-    
     var body: some View {
-        VStack(alignment: .leading) {
-            LazyVStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Related Posts")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            LazyVStack(spacing: 16) {
                 ForEach(viewModel.postsRelated) { postRelated in
                     Button {
                         selectedPost = postRelated
                     } label: {
-                        PostRelatedView(postRelated: postRelated)
+                        PostRelatedView(
+                            postRelated: postRelated,
+                            onToggleBookmark: {
+                                Task {
+                                    await viewModel.toggleBookmark(postId: postRelated.id)
+                                }
+                            }
+                        )
                     }
+                    .buttonStyle(.plain)
                 }
             }
         }
         .navigationDestination(item: $selectedPost) { post in
-                PostDetailView(post: post)
-            }
+            PostDetailView(post: post)
+        }
     }
 }
-

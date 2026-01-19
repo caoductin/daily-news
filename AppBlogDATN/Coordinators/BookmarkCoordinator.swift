@@ -14,6 +14,6 @@ class BookmarkCoordinator: Coordinator {
     var path = NavigationPath()
 
     enum Screen: Hashable {
-        case postDetail(PostDetailModel)
+        case postDetail(PostDetailModel, Namespace.ID?)
     }
 }
