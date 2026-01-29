@@ -3,22 +3,25 @@ import SwiftUI
 struct SearchModule {
 
     @MainActor
-    static func makeView() -> SearchView {
+    static func makeView(postStore: PostStore) -> SearchView {
 
-        // Repository
         let repository = SearchRepositoryImpl()
+        let repositoryPost = PostRepositoryImpl()
 
-        // UseCase
         let searchUseCase = SearchPostUseCase(
             repository: repository
         )
-
-        // ViewModel
-        let viewModel = SearchViewModel(
-            searchUseCase: searchUseCase
+        
+        let markPostUseCase = MarkPostAsBookmarkUsecase(
+            repository: repositoryPost
         )
 
-        // View
+        let viewModel = SearchViewModel(
+            postStore: postStore,
+            searchUseCase: searchUseCase,
+            markPostBookmarkUsecase: markPostUseCase
+        )
+
         return SearchView(
             viewModel: viewModel
         )

@@ -53,6 +53,7 @@ struct HomeTabbarView: View {
 
                 case .search:
                     SearchCoordinatorView(seachCoordinator: coordinator.searchCoordinator)
+                        .environment(coordinator.searchCoordinator)
                 case .bookmark:
                     BookmarkCoordinatorView(bookmark: coordinator.bookMarkCoordinator)
 

@@ -97,7 +97,7 @@ enum APIEndpoint {
     }
     
     var url: URL {
-        return URL(string: "http://localhost:3000\(path)")!
+        return URL(string: "https://backend-blockswift.onrender.com\(path)")!
     }
     
     var rawString: String {
@@ -122,7 +122,8 @@ enum URLAdvance {
 class APIServices {
     static let shared = APIServices()
     
-    private let baseURL = "http://localhost:3000"
+//    private let baseURL = "http://localhost:3000"
+    private let baseURL = "https://backend-blockswift.onrender.com"
     
     private init() {
         
@@ -220,7 +221,7 @@ class APIServices {
             print("url is not valid \(baseURL)\(endpoint)")
             throw URLError(.badURL)
         }
-        
+        print("this is url \(url)")
         let request = createRequest(url: url, method: method.rawValue, body: bodyData, headers: headers)
         
         let (data, response) = try await URLSession.shared.data(for: request)
